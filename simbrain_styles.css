@@ -91,6 +91,71 @@ a:hover
 	background-color: inherit;
 }
 
+h1   
+{ 
+	color: #628596; 
+	font-size: 20px; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-weight: bolder; 
+	text-decoration: underline;
+	font-stretch: extra-condensed; 
+	text-transform: uppercase; 
+	margin-top: 12px; 
+	margin-bottom: 10px; 
+	padding-top: 0; 
+	padding-bottom: 0 
+}
+
+
+.title
+{ 
+	color: #665; 
+	font-size: 20px; 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-weight: bold; 
+}
+
+.subtitle
+{ 
+	color: #628596; 
+	font-size: 18px; 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-weight: bold; 
+	padding-left: 0; 
+}
+
+.heading
+{ 
+	font-size: 14px; 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-weight: bolder; 
+	margin-top: 22px; 
+	margin-bottom: 2px; 
+	vertical-align: sub; 
+}
+
+.heading2
+{ 
+	color: #628596; 
+	font-size: 12px; 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-weight: bolder; 
+	margin-top: 0; 
+	margin-bottom: 0; 
+	padding-top: 12px; 
+	padding-bottom: 0; 
+	padding-left: 0; 
+	vertical-align: 0;
+}
+
+.command
+{ 
+	color: #628596; 
+	font: italic 12px Arial, Helvetica, sans-serif; 
+	text-transform: none; 
+	padding-right: 0; 
+}
+
 .text
 {
 	color: #665;

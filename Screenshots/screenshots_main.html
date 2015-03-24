@@ -14,10 +14,10 @@
 </head>
 
 <body bgcolor="#ffffff" marginheight="40" topmargin="40">
-    <table width="800" cellspacing="0" cellpadding="0" align="center" bordercolor="#536664" border="1">
+    <table width="1200" cellspacing="0" cellpadding="0" align="center" bordercolor="#536664" border="1">
         <tr align="center" valign="middle">
             <td class="border" valign="top">
-                <table width="800" cellspacing="0" cellpadding="0" align="center">
+                <table width="1200" cellspacing="0" cellpadding="0" align="center">
                     <tr valign="top" bgcolor="white" height="1">
                         <td align="left" width="520" height="1"></td>
                         <td width="100%" height="1"></td>
@@ -76,58 +76,45 @@
                         <td rowspan="1" colspan="2" valign="middle" height="80">
                             <p class="text">&nbsp;</p>
                             <div class="text">
+                                <h1>Screenshots</h1>
+                                <br><br>
                                 <table width="100%" border="0">
                                     <tr>
                                         <td colspan="2">
                                             <p class="text">For a video introduction to Simbrain, click <a href="../video/trailer1/simbrain_trailer.html">here</a>. </p>
                                             <p class="text">Click on thumbnails below for larger images. Instructions on how to open / recreate relevant simulations are given on the right. </p>
-                                            <p class="text">&nbsp;</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td width="44%">
                                             <div align="center">
                                                 <p>&nbsp;</p>
-                                                <a href="Simbrain3/SOMworld.png"><img src="Simbrain3/SOMworld_tm.png" width="250" height="140" border="0"></a>
+                                                <a href="Simbrain3/SOMworld.png"><img src="Simbrain3/SOMworld.png" width="500" height="280" border="0"></a>
                                             </div>
                                         </td>
                                         <td width="56%">
-                                            <div align="center" class="text">The SOM Smells workspace. Here to demonstrate that we support self organizing maps (having this alongside spiking computational neuroscience models really shows our flexibility), as well as give a look at one of the more common worlds: Odor World. </div>
+                                            <div align="center" class="text">
+                                                A very basic demonstration of a Kohonen map in Simbrain. This particular workspace is meant for students who can read about self-organizing maps (SOMs) in the text box to the left. The mouse in the right pannel is coupled to the input layer of the network. Each flower and cheese has a unique smell vector which is sent directly to this input layer when the mouse is hovered nearby. Students are instructed to move the mouse over the flowers while the network is running to see the SOM learn representations of the smells in real time. 
+                                                <br><br>
+                                                This workspace comes packaged with Simbrain and is located in:
+                                                <br><br>
+                                                <div class="command">simulations > workspaces > somNetSmells.zip</div>
+                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div align="center">
                                                 <p>&nbsp;</p>
-                                                <a href="Simbrain3/Cerebellum.png"><img src="Simbrain3/Cerebellum_tm.png" width="250" height="139" border="0"></a>
+                                                <a href="Simbrain3/Cerebellum.png"><img src="Simbrain3/Cerebellum.png" width="500" height="280" border="0"></a>
                                             </div>
                                         </td>
                                         <td>
-                                            <div align="center" class="text">This is just the cerebellum script available in the script menu. Chosen to demonstrate the flexibility of Simbrain&#8217;s nodes. They don&#8217;t have to be used explicitly as neurons and instead can be used to represent whole brain areas or the activity of a cluster of neurons for the purposes of more coarse grained simulations and models.</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div align="center">
-                                                <p>&nbsp;</p>
-                                                <a href="Simbrain3/SORNscripting.png"><img src="Simbrain3/SORNscripting_tm.png" width="250" height="140" border="0"></a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div align="center" class="text">This is an instantiation of a SORN (Self organizing recurrent network), see Lazar, Pipa, & Trisect 2009. This is here as an example of several things: 1. Scripting & Flexibility 2. Large scale (the network has something like 5000 neurons and 3.7 Million synapses) 3. The ability to load a .csv file as inputs to the network and simply run it (so long as the input neuron group is in
-                                                <q>input mode</q>). 4. Interesting network structure.</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div align="center">
-                                                <p>&nbsp;</p>
-                                                <a href="Simbrain3/STDP.png"><img src="Simbrain3/STDP_tm.png" width="250" height="144" border="0"></a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div align="center">
-                                                <p class="text">More examples of visualizers. This time the emphasis (especially alongside the giant SORN workspace) is that Simbrain can be used to analyze small scale interactions as well as run giant simulations. It can be used as a teaching tool to get across the concept of STDP as easily as it can be used to educate students as to the dynamics of a reservoir.</p>
+                                            <div align="center" class="text">
+                                                Nodes in Simbrain are highly flexible having a wide variety of transfer functions from sigmoid squashing functions to adaptive exponential integrate and fire. However since Simbrain allows users to manipulate invidividual neurons and synapses simplified network models like the cerebellum model to the left can be easily instantiated as well. Here individual nodes represent entire brain areas rather than indidvidual neurons. This model was created through custom scripting, which allows the scripter to create custom training scenarios.
+                                                <br><br>
+                                                The cerebellum script comes packaged with Simbrain and can be accessed from the workspace via:<br><br>
+                                                <div class="command"> Scripts > Cerebellum.bsh</div>
                                             </div>
                                         </td>
                                     </tr>
@@ -135,26 +122,15 @@
                                         <td>
                                             <div align="center">
                                                 <p>&nbsp;</p>
-                                                <a href="Simbrain3/TextWorld.png"><img src="Simbrain3/TextWorld_tm.png" width="250" height="139" border="0"></a>
+                                                <a href="Simbrain3/SORNscripting.png"><img src="Simbrain3/SORNscripting.png" width="500" height="280" border="0"></a>
                                             </div>
                                         </td>
                                         <td>
-                                            <div align="center">
-                                                <p class="text">I like this one because it displays another one of the worlds as well as shows a trained Simple recurrent network (yet another model we support). The PCA plot to the left I think is extra impressive though. I coupled it to the hidden layer and low and behold it looks like we have 5 or 6 distinct clusters. When the network is run you can actually see how certain strings of letters move the hidden layer into or from one of those clusters. The large one at the top appeared to be where the network went when there were a lot of
-                                                    <q>u</q>s in the input history.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div align="center">
-                                                <p>&nbsp;</p>
-                                                <a href="Simbrain3/RealNeuralNetwork.png"><img src="Simbrain3/RealNeuralNetwork_tm.png" width="250" height="140" border="0"></a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div align="center">
-                                                <p class="text"> This neural network&#8217;s synapse weights were extrapolated from a transfer entropy matrix which was taken from a dissociated culture of living neural tissue. Each node is placed at the coordinates where a 512 electrode array was used to ascertain the location of individual neurons. Synapses are where TE-Analysis indicates real synaptic connections are the most likely to exist. The neuron model used here is the adaptive exponential integrate and fire model. Again this shows our flexibility. You can load a weight matrix taken from real neurons as well as their positions and viola, you can put that model in Simbrain.</p>
+                                            <div align="center" class="text"><br><br>This is an instantiation of a SORN (Self organizing recurrent network) (Lazar, Pipa, & Triesch, 2009) in Simbrain. The flexibility of Simbrain (especially with the use of scripts) is quite broad allowing for the instantiation of many different and specialized network models like the SORN (which involves 3 different forms of plasticity). This screenshot also demonstrates the massive improvement in network scalability in Simbrain 3.0 over the 2.0 version. In the simlation to the right 5115 neurons, and 3.6 million synapses are being simulated. 
+                                                <br><br>
+                                                The neuron group on the bottom represents an input layer, which can load activation values from a file. The table at the bottom is a shows the contents of a .csv file being used as input to this network. When the input neuron group is set in "input mode", it will automatically draw its activations from the specified input file when the network is run.
+                                                <br><br>
+                                                This particular network uses features which will not be present until the release of Simbrain 3.1. However, it is possible to create a SORN model in Simbrain 3.0 entirely through scripting, please feel free to contact the authors if you are interested in simulating a SORN prior to 3.1.
                                             </div>
                                         </td>
                                     </tr>
@@ -162,12 +138,59 @@
                                         <td>
                                             <div align="center">
                                                 <p>&nbsp;</p>
-                                                <a href="Simbrain3/Visualizers.png"><img src="Simbrain3/Visualizers_tm.png" width="250" height="141" border="0"></a>
+                                                <a href="Simbrain3/STDP.png"><img src="Simbrain3/STDP.png" width="500" height="280" border="0"></a>
                                             </div>
                                         </td>
                                         <td>
                                             <div align="center">
-                                                <p class="text">TODO</p>
+                                                <p class="text">
+                                                    <br>
+                                                    Simbrain can be used to demonstrate, analyze, and visualize small scale interactions as well. Here we have an example of a synapse, the strength of which is governed by Hebbian STDP. Again, to the left we have a text box with information on STDP which students can read in adddition to interacting with the model. Further right we have a data table which is coupled to two invidual neurons which themselves drive the neurons to either side of the STDP synapse. The order of activation of the driving neurons can be set in this data table and here has been set so as to result in potentiation of the STDP synapse. On the right we have a timeseries of the synapse's strength over time as well as a raster of the neurons between the STDP synapse.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <p>&nbsp;</p>
+                                                <a href="Simbrain3/TextWorld.png"><img src="Simbrain3/TextWorld.png" width="500" height="280" border="0"></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <p class="text">
+                                                    Simbrain's text world allows users to directly couple lexical tokens (at a letter or word level of granularity) to vectors which can be used as the input to a network. Here we have a text world coupled to a simple recurrent network, which is being trained to anticipate the next letter in the sequence based on its previous observations. Below the text world we see a panel displaying the error of the simple recurrent network. To the right we have a PCA projection of the activation of the hidden layer. Interestingly we can see several clusters corresponding to different charateristic sequences in the input text.
+                                                    
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <p>&nbsp;</p>
+                                                <a href="Simbrain3/RealNeuralNetwork.png"><img src="Simbrain3/RealNeuralNetwork.png" width="500" height="280" border="0"></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <p class="text"> 
+                                                    <br>
+                                                    Here is a recreation of a living neural network, using data recorded from a 512 multielectrode array. The original living neural network was prepared as a dissociated culture of neurons taken from rat somatosensory cortex. Transfer entropy analysis was performed on the spike trains in the culture to find which neurons had the highest likelihood of being connected by a synapse. The resulting matrix was transformed into a weight matrix and used as the basis for the synaptic connections in the picture. 
+                                                     The neuron model used here is the adaptive exponential integrate and fire model. Users can load a weight matrix taken from real neurons as well as their positions and viola, the user can put that model in Simbrain.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <p>&nbsp;</p>
+                                                <a href="Simbrain3/Visualizers.png"><img src="Simbrain3/Visualizers.png" width="500" height="280" border="0"></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <p class="text"><br>Here is an example of several visualizers operating at once. Each visualizer is coupled to a network which for the sake of the photo has had its GUI turned off. In the upper left we have a neuron group coupled to an exponential convolution of the spike trains of the network. This roughly displays how active a given neuron has been in the recent past. The histogram represents the firing rates of each of the neurons, while the PCA analysis is being done on an exponential convolution of a subsample of the network's spike trains. Below we have a raster plot as well as a time series showing an exponential convolution of the spike trains of several randomly selected neurons.  </p>
                                             </div>
                                         </td>
                                     </tr>
