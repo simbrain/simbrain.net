@@ -36,79 +36,60 @@
         </div>
         <div class="row" style="margin-top: 5%">
             <h4>Screenshots</h4>
-            <p>Click on thumbnails below for larger images. Instructions on how to open / recreate relevant simulations are given on the right. </p>
             <div>
-                <p>&nbsp;</p>
                 <a href="Simbrain3/SOMworld.png"><img src="Simbrain3/SOMworld.png" width="500" height="280" border="0"></a>
             </div>
             <div>
-                A very basic demonstration of a Kohonen map in Simbrain. This particular workspace is meant for students who can read about self-organizing maps (SOMs) in the text box to the left. The mouse in the right pannel is coupled to the input layer of the network. Each flower and cheese has a unique smell vector which is sent directly to this input layer when the mouse is hovered nearby. Students are instructed to move the mouse over the flowers while the network is running to see the SOM learn representations of the smells in real time.
-                <br>
-                <br> This workspace comes packaged with Simbrain and is located in:
-                <br>
-                <br>
-                <code> [Open Workspace] simulations > workspaces > somNetSmells.zip
+                A Kohonen map or SOM (Self-organizing-map). The mouse is coupled to the input layer of the network. Each flower and cheese has a smell vector which is sent to the input layer when the mouse hovers nearby. The SOM learns representations of the smells as the mouse is moved around the different objects.
                 </code>
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/Cerebellum.png"><img src="Simbrain3/Cerebellum.png" width="500" height="280" border="0"></a>
             </div>
             <div>
-                Nodes in Simbrain are highly flexible having a wide variety of transfer functions from sigmoid squashing functions to adaptive exponential integrate and fire. However since Simbrain allows users to manipulate invidividual neurons and synapses simplified network models like the cerebellum model to the left can be easily instantiated as well. Here individual nodes represent entire brain areas rather than indidvidual neurons. This model was created through custom scripting, which allows the scripter to create custom training scenarios.
-                <br>
-                <br> The cerebellum script comes packaged with Simbrain and can be accessed from the workspace via:
-                <br>
-                <br>
-                <code> [ScriptMenu] Cerebellum.bsh</code>
+                This cerebellum model shows how patterns controlled by cortex and basal ganglia can be encoded by the the cerebellum. High level patterns are "encoded" in the cerebellum, which is a repository for stored patterns (in this case, a simple mapping from "go" to 1 and "no go" to 0).
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/SORNscripting.png"><img src="Simbrain3/SORNscripting.png" width="500" height="280" border="0"></a>
             </div>
             <div>
-                <br>
-                <br>This is an instantiation of a SORN (Self organizing recurrent network) (Lazar, Pipa, & Triesch, 2009) in Simbrain. The flexibility of Simbrain (especially with the use of scripts) is quite broad allowing for the instantiation of many different and specialized network models like the SORN (which involves 3 different forms of plasticity). This screenshot also demonstrates the massive improvement in network scalability in Simbrain 3.0 over the 2.0 version. In the simlation to the right 5115 neurons, and 3.6 million synapses are being simulated.
-                <br>
-                <br> The neuron group on the bottom represents an input layer, which can load activation values from a file. The table at the bottom is a shows the contents of a .csv file being used as input to this network. When the input neuron group is set in "input mode", it will automatically draw its activations from the specified input file when the network is run.
-                <br>
-                <br> This particular network uses features which will not be present until the release of Simbrain 3.1. However, it is possible to create a SORN model in Simbrain 3.0 entirely through scripting, please feel free to contact the authors if you are interested in simulating a SORN prior to 3.1.
+                <br>A SORN or Self Organizing Recurrent Network (Lazar, Pipa, & Triesch, 2009). 5115 neurons, 3.6 million synapses, and 3 forms of plasticity. Implemented using a script (not yet available from the GUI).
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/STDP.png"><img src="Simbrain3/STDP.png" width="500" height="280" border="0"></a>
             </div>
             <div>
-                <p>
-                    <br> Simbrain can be used to demonstrate, analyze, and visualize small scale interactions as well. Here we have an example of a synapse, the strength of which is governed by Hebbian STDP. Again, to the left we have a text box with information on STDP which students can read in adddition to interacting with the model. Further right we have a data table which is coupled to two invidual neurons which themselves drive the neurons to either side of the STDP synapse. The order of activation of the driving neurons can be set in this data table and here has been set so as to result in potentiation of the STDP synapse. On the right we have a timeseries of the synapse's strength over time as well as a raster of the neurons between the STDP synapse.
-                </p>
+                <br>Hebbian STDP. The table is coupled to two individual neurons which drive the neurons on either side of the STDP synapse. The order of activation of the driving neurons can be set in the data table. The case shown potentiates the STDP synapse. A time-series of the synapse's strength and raster of neuron firing patterns are also shown.
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/TextWorld.png"><img src="Simbrain3/TextWorld.png" width="500" height="280" border="0"></a>
             </div>
             <div>
                 <p>
-                    Simbrain's text world allows users to directly couple lexical tokens (at a letter or word level of granularity) to vectors which can be used as the input to a network. Here we have a text world coupled to a simple recurrent network, which is being trained to anticipate the next letter in the sequence based on its previous observations. Below the text world we see a panel displaying the error of the simple recurrent network. To the right we have a PCA projection of the activation of the hidden layer. Interestingly we can see several clusters corresponding to different charateristic sequences in the input text.
+                    Lexical tokens parsed in a Text World and coupled to the input layer of a simple recurrent network (SRN), which is being trained to anticipate the next phoneme in a training sequence. The data is a sequence of phonemes organized in to three words ("ba","dii", "guu"). The bottom-left panel shows the predicted next phoneme at a time, the actual next phoneme, and error. A PCA projection of activations of the hidden layer is shown on the left. Clusters correspond to characteristic sequences of input text.  The network is based on Elman 1990.
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/RealNeuralNetwork.png"><img src="Simbrain3/RealNeuralNetwork.png" width="500" height="280" border="0"></a>
             </div>
             <div>
+                <br>
                 <p>
-                    <br> Here is a recreation of a living neural network, using data recorded from a 512 multielectrode array. The original living neural network was prepared as a dissociated culture of neurons taken from rat somatosensory cortex. Transfer entropy analysis was performed on the spike trains in the culture to find which neurons had the highest likelihood of being connected by a synapse. The resulting matrix was transformed into a weight matrix and used as the basis for the synaptic connections in the picture. The neuron model used here is the adaptive exponential integrate and fire model. Users can load a weight matrix taken from real neurons as well as their positions and viola, the user can put that model in Simbrain.</p>
+                     A re-creation of a living neural network, using data recorded from a 512 multi- electrode array. The original living neural network was prepared as a dissociated culture of neurons taken from rat somatosensory cortex. Transfer entropy analysis was performed on the spike trains in the culture to find which neurons had the highest likelihood of being connected by a synapse. The resulting matrix was transformed into a weight matrix and used as the basis for the synaptic connections in the picture. The neuron model used here is the adaptive exponential integrate and fire model. Users can load a weight matrix taken from real neurons as well as their positions and can put that model in Simbrain.</p>
             </div>
             <div>
-                <p>&nbsp;</p>
+                <br>
                 <a href="Simbrain3/Visualizers.png"><img src="Simbrain3/Visualizers.png" width="500" height="280" border="0"></a>
             </div>
             <div>
                 <p>
-                    <br>Here is an example of several visualizers operating at once. Each visualizer is coupled to a network which for the sake of the photo has had its GUI turned off. In the upper left we have a neuron group coupled to an exponential convolution of the spike trains of the network. This roughly displays how active a given neuron has been in the recent past. The histogram represents the firing rates of each of the neurons, while the PCA analysis is being done on an exponential convolution of a subsample of the network's spike trains. Below we have a raster plot as well as a time series showing an exponential convolution of the spike trains of several randomly selected neurons. </p>
+                    <br>Several visualizers operating at once. Each is coupled to a network (which is running without the GUI). The upper left shows a neuron group coupled to an exponential convolution of its spike trains. This roughly displays how active a neuron has been. The histogram shows how firing rates are distributed across neurons. Low dimension projection using PCA on an exponential convolution of a subsample of the network's spike trains. The raster plot and time series showing an exponential convolution of the spike trains of several randomly selected neurons. </p>
             </div>
             <div>
-                <p>&nbsp;</p>
                 <p>For screenshots of older versions of Simbrain click <a href="screenshots_historic.html">here</a>.</p>
             </div>
         </div>
