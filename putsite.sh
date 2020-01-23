@@ -1,0 +1,1 @@
+rsync ./ -avz -e ssh jyoshimi@jeffyoshimi.net:public_html/simbrain

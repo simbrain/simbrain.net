@@ -1,7 +1,7 @@
 Repo for www.simbrain.net
 =========================
 
-Here's where the simbrain.net website should be developed.  The plan is to work on it here, then rsync it to the actual website periodically.
+Here's where the simbrain.net website should be developed.  Update it here then use the shell script to sync it to the remote website.
 
 Notes
 -----
