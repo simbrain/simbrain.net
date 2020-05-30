@@ -11,6 +11,14 @@ http://www.simbrain.net/credits redirects to http://www.simbrain.net/Documentati
 Some things _not_ currently stored here
 ----------------------------------------
 
-* The actual download files
-* javadocs
-* Other documentation (It's already in the main simbrain repo so would be redundant here)
+The actual download files. 
+	These are manually uploaded to the site.
+
+The javadocs, in Documentation/apidocs.  
+	These must be manually generated using the javatool and uploaded.
+
+The Simbrain documentation,in Documentation/docs.  
+
+	This is synced from the main simbrain repository. 
+	Currently drawing from Simbrain 4.0 Branch. 
+	To sync use put_docs.sh
