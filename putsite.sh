@@ -1,1 +1,1 @@
-rsync ./ -avz -e ssh jyoshimi@jeffyoshimi.net:public_html/simbrain
+rsync ./ -avz --exclude=".*" -e ssh jyoshimi@jeffyoshimi.net:public_html/simbrain

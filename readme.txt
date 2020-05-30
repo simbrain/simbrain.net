@@ -1,7 +1,7 @@
 Repo for www.simbrain.net
 =========================
 
-Here's where the simbrain.net website should be developed.  Update it here then use the shell script to sync it to the remote website.
+Here's where the simbrain.net website should be developed.  Update it here then use the shell script put.sh to sync it to the remote website.
 
 Notes
 -----
