@@ -1,7 +1,7 @@
 Repo for www.simbrain.net
 =========================
 
-Here's where the simbrain.net website should be developed.  Update it here then use the shell script put.sh to sync it to the remote website.
+Here's where the simbrain.net website should be developed. Update it here then use the shell script put.sh to sync it to the remote website.
 
 Notes
 -----
@@ -16,9 +16,10 @@ The actual download files.
 
 The javadocs, in Documentation/apidocs.  
 	These must be manually generated using the javatool and uploaded.
+	Current v3 is all that is up. v4 will have to be added later.
 
-The Simbrain documentation,in Documentation/docs.  
+Simbrain 3 documentation is stored in Documentation/v3/
+	Synced from code repository using put_v4_docs.sh
 
-	This is synced from the main simbrain repository. 
-	Currently drawing from Simbrain 4.0 Branch. 
-	To sync use put_docs.sh
+Simbrain 4 documentation is stored in Documentation/v4/
+	Synced from code repository using put_v4_docs.sh
