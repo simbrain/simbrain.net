@@ -4,7 +4,7 @@ Repo for www.simbrain.net
 Here's where the simbrain.net website should be developed. Make changes and updated to the repo.
 
 Use put_site.sh to sync.
-
+	
 Some things _not_ currently stored here
 ----------------------------------------
 
