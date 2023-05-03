@@ -1,23 +1,9 @@
 Repo for www.simbrain.net
 =========================
 
-Here's where the simbrain.net website should be developed. Make changes and updated to the repo.
+Scripts for pushing the site are in ./scripts. They must be executed from that directory.
 
-Use put_site.sh to sync.
-	
-Some things _not_ currently stored here
-----------------------------------------
+Tools for uploading the executables and docs are in the simbrain 3 and 4 repos.
 
-Download files. 
-	Use put_downloads.sh. May have to run it on different machines Simbrain is built on.
+Javadocs must be manually generated using the javatool and uploaded. Currently v3 is all that is up. 
 
-Simbrain 3 documentation is stored in Documentation/v3/
-	Synced from code repository using put_v4_docs.sh
-
-Simbrain 4 documentation is stored in Documentation/v4/
-	Synced from code repository using put_v4_docs.sh
-
-Javadocs
-	These must be manually generated using the javatool and uploaded.
-	Current v3 is all that is up. 
-	Todo: v4.
