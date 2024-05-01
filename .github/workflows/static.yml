@@ -31,13 +31,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: site
+      - name: Checkout v3 docs
+        uses: actions/checkout@v4
+        with:
+          repository: simbrain/simbrain
+          ref: Simbrain3
+          path: v3
+      - name : Copy v3 docs
+        run: cp -r v3/docs site/Documentation/v3
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
