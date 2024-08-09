@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="../css/skeleton.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
+    <style>
+        #platformType {
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+    </style>
 
 </head>
 
@@ -43,9 +49,7 @@
             <div><i class="fab fa-apple"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain-3.07.dmg">Simbrain 3.07 Mac (Intel)</a></div>
             <div><i class="fab fa-windows"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain_Installer-3.07.exe">Simbrain 3.07 Windows</a></div>
             <div><i class="fab fa-linux"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain3.07.zip">Simbrain 3.07 Linux / Executible Jar</a></div>
-            <br>
             <div id="platformType"></div>
-            <br>
             <div><a href="downloads_archive.html">Earlier Versions of Simbrain</a> </div>
         </div>
     </div>
@@ -53,7 +57,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script>
     async function detectMacChip() {
-        let platformType
+        let platformType = "";
         const userAgent = await navigator.userAgentData.getHighEntropyValues(['architecture'])
         if (userAgent.platform === "macOS") {
             if (userAgent.architecture === "arm") {
