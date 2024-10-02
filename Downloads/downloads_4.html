@@ -20,6 +20,14 @@
     <link rel="stylesheet" href="../css/skeleton.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
+    <style>
+        #platformType {
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+    </style>
+
+    <script src="/js/utils.js" type="text/javascript"></script>
 
 </head>
 
@@ -39,14 +47,18 @@
         </div>
         <div class="row" style="margin-top: 5%">
             <h4>Simbrain 4 (Beta) Download</h4>
-            <div><i class="fab fa-apple"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain4Beta.dmg">Simbrain 4 Mac</a></div>
+            <div><i class="fab fa-apple"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain4Beta.dmg">Simbrain 4 Mac (Apple Silicon)</a></div>
+            <div><i class="fab fa-apple"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain4Beta_x64.dmg">Simbrain 4 Mac (Intel)</a></div>
             <div><i class="fab fa-windows"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain4Beta.exe">Simbrain 4 Windows</a></div>
             <div><i class="fab fa-linux"></i> &nbsp; <a href="https://downloads.simbrain.net/Simbrain4Beta.zip">Simbrain 4 Linux / Executible Jar</a></div>
-            <br>
+            <div id="platformType"></div>
         </div>
     </div>
     <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script>
+        (async () => {document.querySelector("#platformType").innerText = await detectMacChip()})();
+    </script>
 </body>
 
 </html>

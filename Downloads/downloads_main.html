@@ -27,6 +27,8 @@
         }
     </style>
 
+    <script src="/js/utils.js" type="text/javascript"></script>
+
 </head>
 
 <body>
@@ -55,22 +57,9 @@
     </div>
     <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script>
-    async function detectMacChip() {
-        let platformType = "";
-        const userAgent = await navigator.userAgentData.getHighEntropyValues(['architecture'])
-        if (userAgent.platform === "macOS") {
-            if (userAgent.architecture === "arm") {
-                platformType = "Note: Your browser is running on a Mac that is using an Apple Silicon chip"
-            } else {
-                platformType = "Note: Your browser is running on a Mac machine that is using an Intel chip"
-            }
-        }
-        return platformType;
-    }
-    (async () => {document.querySelector("#platformType").innerText = await detectMacChip()})();
-
-</script>
+    <script>
+        (async () => {document.querySelector("#platformType").innerText = await detectMacChip()})();
+    </script>
 
 </body>
 
