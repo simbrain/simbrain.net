@@ -2,6 +2,10 @@ async function detectMacChip() {
     const userAgentString = navigator.userAgent
     const isChrome = userAgentString.indexOf("Chrome") > -1
     const isMacOS = userAgentString.indexOf("Mac OS") > -1
+    const isWindows = userAgentString.indexOf("Windows") > -1
+    if (isWindows) {
+        return "Currently the Windows App is not signed. You may need to click 'More info' and then 'Run anyway'"
+    }
     if (isMacOS) {
         if (isChrome) {
             const userAgentData = await navigator.userAgentData.getHighEntropyValues(['architecture'])
