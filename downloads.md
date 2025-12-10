@@ -10,12 +10,10 @@ permalink: /downloads/
 
 {% if latest %}
 ## {{ latest.name }}
-
+<p class="text-muted">Released: {{ latest.published | date: "%B %d, %Y" }}</p>
 <div id="platform-message" class="alert alert-info mb-4" style="display: none;">
   <i class="bi bi-info-circle"></i> <span id="platform-text"></span>
 </div>
-
-<p class="text-muted">Released: {{ latest.published | date: "%B %d, %Y" }}</p>
 <div class="d-flex flex-column gap-2 mb-4" id="download-cards">
 {% for asset in latest.assets %}
   {% if asset.platform != 'other' %}
