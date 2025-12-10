@@ -1,0 +1,23 @@
+{
+  "name": "Jekyll",
+  "image": "mcr.microsoft.com/devcontainers/ruby:3.2",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "postCreateCommand": "npm install && bundle install",
+  "forwardPorts": [4000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "shopify.ruby-lsp",
+        "sissel.shopify-liquid",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "remoteUser": "vscode"
+}

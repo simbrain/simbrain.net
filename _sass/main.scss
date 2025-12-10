@@ -1,0 +1,19 @@
+// Simbrain Website Styles
+// Using Bootswatch Simplex theme with custom brand colors
+
+// 1. Simbrain brand color overrides (BEFORE Simplex variables)
+$primary: #5C9EAD;    // Teal from logo
+$secondary: #E07B53;  // Orange from logo
+$link-color: #5C9EAD;
+
+// 2. Import Simplex theme variables
+@import "../node_modules/bootswatch/dist/simplex/variables";
+
+// 3. Import Bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// 4. Import Simplex bootswatch customizations
+@import "../node_modules/bootswatch/dist/simplex/bootswatch";
+
+// 5. Custom Simbrain styles
+@import "custom";

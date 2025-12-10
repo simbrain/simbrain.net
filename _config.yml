@@ -1,0 +1,43 @@
+title: Simbrain
+description: A free tool for building, running, and analyzing neural networks
+url: "https://simbrain.net"
+baseurl: ""
+
+sass:
+  style: compressed
+  load_paths:
+    - _sass
+    - node_modules
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Navigation links
+navigation:
+  - title: Download
+    url: /downloads/
+  - title: Book
+    url: https://downloads.jeffyoshimi.net/NeuralNetworksCogsci.pdf
+    external: true
+  - title: Docs
+    url: https://docs.simbrain.net/
+    external: true
+  - title: GitHub
+    url: https://github.com/simbrain/simbrain
+    external: true
+  - title: Credits
+    url: /credits/
+
+# GitHub releases config
+github_repo: simbrain/simbrain
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - package.json
+  - package-lock.json
+  - node_modules
+  - README.md

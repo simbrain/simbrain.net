@@ -1,0 +1,67 @@
+// Simbrain Custom Styles
+
+// Navbar styling
+.navbar-brand img {
+  height: 40px;
+}
+
+// Hero section on homepage
+.hero {
+  padding: 3rem 0;
+
+  h1 {
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: $secondary;
+  }
+}
+
+// Download cards
+.download-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Platform icons in download section
+.platform-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: $primary;
+}
+
+// Footer
+.footer {
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid #dee2e6;
+
+  a {
+    color: $primary;
+
+    &:hover {
+      color: darken($primary, 10%);
+    }
+  }
+}
+
+// Utility classes
+.text-simbrain-teal {
+  color: $primary !important;
+}
+
+.text-simbrain-orange {
+  color: $secondary !important;
+}
+
+.btn-simbrain {
+  @extend .btn-primary;
+}
