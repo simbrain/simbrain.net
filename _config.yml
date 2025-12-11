@@ -27,6 +27,9 @@ navigation:
   - title: GitHub
     url: https://github.com/simbrain/simbrain
     external: true
+  - title: v3 Site
+    url: https://v3.simbrain.net
+    external: true
   - title: Credits
     url: /credits/
 
