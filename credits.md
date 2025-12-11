@@ -19,18 +19,22 @@ permalink: /credits/
 </div>
 <div class="card-body">
 <div class="row">
-<div class="col-md-4 mb-3 mb-md-0">
+<div class="col-md-3 mb-3 mb-md-0">
 <h6 class="text-muted small text-uppercase">Version 4.0</h6>
 <p class="mb-0">Yulin Li, Jeff Yoshimi, Zoë Tosi, Tim Shea</p>
-<small class="text-muted">See pull requests for <a href="https://github.com/simbrain/simbrain/pulls?q=is%3Apr+">code</a> and <a href="https://github.com/simbrain/simbraindocs/pulls?q=is%3Apr">docs</a></small>
+<small class="text-muted">Also see pull requests for <a href="https://github.com/simbrain/simbrain/pulls?q=is%3Apr+">code</a> and <a href="https://github.com/simbrain/simbraindocs/pulls?q=is%3Apr">docs</a></small>
 </div>
-<div class="col-md-4 mb-3 mb-md-0">
+<div class="col-md-3 mb-3 mb-md-0">
 <h6 class="text-muted small text-uppercase">Version 3.0</h6>
 <p class="mb-0">Zoë Tosi, Jeff Yoshimi</p>
 </div>
-<div class="col-md-4">
+<div class="col-md-3 mb-3 mb-md-0">
 <h6 class="text-muted small text-uppercase">Version 2.0</h6>
 <p class="mb-0">Michael Heuer, Zoë Tosi, James Matthew Watson, Jeff Yoshimi</p>
+</div>
+<div class="col-md-3">
+<h6 class="text-muted small text-uppercase">Version 1.0</h6>
+<p class="mb-0"><a href="https://www.jeffyoshimi.net">Jeff Yoshimi</a></p>
 </div>
 </div>
 </div>
@@ -44,7 +48,7 @@ permalink: /credits/
 <h5 class="mb-0"><i class="bi bi-people me-2"></i>Other Coding Help</h5>
 </div>
 <div class="card-body">
-<p class="mb-0">Kyle Baron, Ryan Bartley, Ashish Gupta, Scott Hotton, Eric Johnson, Jason Laurel, Lam Nguyen, Amanda Pandey, William Benjamin St. Claire, Mai Ngoc Thang, Jonathan Vickrey, Sharai Wilson</p>
+<p class="mb-0">Kyle Baron, Ryan Bartley, Jensen Guo, Ashish Gupta, Scott Hotton, Eric Johnson, Jason Laurel, Lam Nguyen, Amanda Pandey, William Benjamin St. Claire, Mai Ngoc Thang, Jonathan Vickrey, Sharai Wilson</p>
 </div>
 </div>
 </div>
@@ -58,15 +62,15 @@ permalink: /credits/
 <p>Elizabeth Reagh, David Fleischmann, Soraya Boza, Brian Nucum</p>
 <p class="text-muted small mb-0">
 Graphics adapted from:
-<a href="https://www.patreon.com/kenney">Kenney</a>,
-<a href="http://www.reinerstilesets.de/">Reiner's Tilesets</a>,
-<a href="http://commons.wikimedia.org/">Wikimedia Commons</a>,
 <a href="https://creativecommons.org/">Creative Commons</a>,
-<a href="http://tango.freedesktop.org/">Tango Desktop</a>,
 <a href="http://www.flaticon.com/">Flaticon</a>,
-<a href="http://pixabay.com/">Pixabay</a>,
 <a href="https://www.freepik.com/">Freepik</a>,
-<a href="https://thenounproject.com/Samuelebandini/">Noun Project</a>
+<a href="https://www.patreon.com/kenney">Kenney</a>,
+<a href="https://thenounproject.com/Samuelebandini/">Noun Project</a>,
+<a href="http://pixabay.com/">Pixabay</a>,
+<a href="http://www.reinerstilesets.de/">Reiner's Tilesets</a>,
+<a href="http://tango.freedesktop.org/">Tango Desktop</a>,
+<a href="http://commons.wikimedia.org/">Wikimedia Commons</a>
 </p>
 </div>
 </div>
@@ -79,7 +83,7 @@ Graphics adapted from:
 <h5 class="mb-0"><i class="bi bi-heart me-2"></i>Special Thanks</h5>
 </div>
 <div class="card-body">
-<p class="mb-2">Saraching Chao, Rick Dale, Cheryl Evry, Carlos Garcia, Mariel Gonzales, Jim Gregoric, Daniel Holman, Alex Holcombe, Tyler Jones, Matthew Lloyd, Simon Levy, Arianna Malakis, Armin Mayrhofer, Connor Pemberton, Megan Pemberton, Maria Puglisi, Jeff Rodny, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
+<p class="mb-2">Melissa Almeida, Ellis Cain, Saraching Chao, Rick Dale, Cheryl Evry, Ben Fried, Stephanie Gamino, Alfredo Garcia, Carlos Garcia, Mariel Gonzales, Jim Gregoric, Alex Holcombe, Daniel Holman, Tyler Jones, Simon Levy, Matthew Lloyd, Arianna Malakis, Armin Mayrhofer, Andrew Park, Connor Pemberton, Megan Pemberton, Sergio Ponce De Leon, Maria Puglisi, Jeff Rodny, Veer Sahai, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
 <p class="text-muted mb-0">Many other students at and visitors to <a href="http://www.ucmerced.edu">UC Merced</a> have provided valuable feedback.</p>
 </div>
 </div>
@@ -105,6 +109,7 @@ Graphics adapted from:
 <a href="http://ostermiller.org/" class="badge text-bg-light text-decoration-none">Ostermiller</a>
 <a href="http://www.cs.umd.edu/hcil/piccolo" class="badge text-bg-light text-decoration-none">Piccolo</a>
 <a href="http://bobbylight.github.io/RText/" class="badge text-bg-light text-decoration-none">RSyntaxTextArea</a>
+<a href="https://haifengl.github.io/" class="badge text-bg-light text-decoration-none">Smile</a>
 <a href="http://mvnrepository.com/artifact/ca.umontreal.iro/ssj/2.5" class="badge text-bg-light text-decoration-none">SSJ</a>
 <a href="https://java.net/projects/swinglabs" class="badge text-bg-light text-decoration-none">SwingLabs</a>
 <a href="https://www.cs.waikato.ac.nz/ml/weka/" class="badge text-bg-light text-decoration-none">Weka</a>
