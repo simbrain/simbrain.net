@@ -24,20 +24,20 @@ title: Home
   <div class="col-md-4">
     <div class="card h-100 text-center">
       <div class="card-body">
-        <i class="bi bi-book platform-icon"></i>
-        <h5 class="card-title">Book</h5>
-        <p class="card-text">Learn about neural networks with our free textbook.</p>
-        <a href="https://downloads.jeffyoshimi.net/NeuralNetworksCogsci.pdf" class="btn btn-outline-primary" target="_blank" rel="noopener">Read Book</a>
+        <i class="bi bi-file-text platform-icon"></i>
+        <h5 class="card-title">Documentation</h5>
+        <p class="card-text">Comprehensive guides and API documentation.</p>
+        <a href="https://docs.simbrain.net/" class="btn btn-outline-primary" target="_blank" rel="noopener">View Docs</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card h-100 text-center">
       <div class="card-body">
-        <i class="bi bi-file-text platform-icon"></i>
-        <h5 class="card-title">Documentation</h5>
-        <p class="card-text">Comprehensive guides and API documentation.</p>
-        <a href="https://docs.simbrain.net/" class="btn btn-outline-primary" target="_blank" rel="noopener">View Docs</a>
+        <i class="bi bi-book platform-icon"></i>
+        <h5 class="card-title">Book</h5>
+        <p class="card-text">Learn about neural networks with our free textbook.</p>
+        <a href="https://downloads.jeffyoshimi.net/NeuralNetworksCogsci.pdf" class="btn btn-outline-primary" target="_blank" rel="noopener">Read Book</a>
       </div>
     </div>
   </div>
