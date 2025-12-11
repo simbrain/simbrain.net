@@ -162,6 +162,10 @@ permalink: /downloads/
 <p class="mt-2 text-muted">
   <a href="https://v3.simbrain.net/Downloads/downloads_main.html" rel="noopener">Simbrain 3.0 Downloads</a>
 
+<p class="mt-2 text-muted">
+  <a href="https://v3.simbrain.net/Downloads/downloads_main.html" rel="noopener">Simbrain 3.0 Downloads</a>
+
+
 {% else %}
 <div class="alert alert-info">
   <i class="bi bi-info-circle"></i>
