@@ -79,6 +79,11 @@ permalink: /downloads/
     const userAgent = navigator.userAgent.toLowerCase();
     const platform = navigator.platform?.toLowerCase() || '';
     
+    // Skip detection for mobile devices (Simbrain is desktop only)
+    if (/iphone|ipad|ipod|android|mobile|phone/i.test(navigator.userAgent)) {
+      return null;
+    }
+    
     // Check for Mac
     if (userAgent.includes('mac') || platform.includes('mac')) {
       // Check for Apple Silicon
