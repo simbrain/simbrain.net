@@ -19,44 +19,52 @@ permalink: /downloads/
   {% if asset.platform != 'other' %}
   <div class="download-item" data-platform="{{ asset.platform }}">
     <div class="card">
-      <div class="card-body py-2 px-3 d-flex align-items-center">
-        <span class="me-3 text-muted" style="font-size: 1.25rem;">
-          {% if asset.platform == 'windows' %}
-            <i class="bi bi-windows"></i>
-          {% elsif asset.platform == 'mac-silicon' %}
-            <i class="bi bi-apple"></i>
-          {% elsif asset.platform == 'mac-intel' %}
-            <i class="bi bi-apple"></i>
-          {% elsif asset.platform == 'linux' or asset.platform == 'cross-platform' %}
-            <i class="bi bi-terminal"></i>
-          {% else %}
-            <i class="bi bi-file-zip"></i>
-          {% endif %}
-        </span>
-        <span class="fw-medium me-2" style="min-width: 140px;">
-          {% if asset.platform == 'windows' %}
-            Windows
-          {% elsif asset.platform == 'mac-silicon' %}
-            Mac (Apple Silicon)
-          {% elsif asset.platform == 'mac-intel' %}
-            Mac (Intel)
-          {% elsif asset.platform == 'linux' %}
-            Linux
-          {% elsif asset.platform == 'cross-platform' %}
-            Linux (ZIP)
-          {% elsif asset.platform == 'full-zip' %}
-            Cross-Platform (ZIP)
-          {% else %}
-            Download
-          {% endif %}
-        </span>
-        <span class="text-muted small me-auto">
-          {{ asset.name }}
-          <span class="ms-1">({% assign size_mb = asset.size | divided_by: 1048576 %}{{ size_mb }} MB)</span>
-        </span>
-        <a href="{{ asset.url }}" class="btn btn-sm btn-primary">
-          <i class="bi bi-download"></i> Download
-        </a>
+      <div class="card-body py-2 px-3">
+        <div class="row align-items-center g-2">
+          <div class="col-12 col-sm-auto d-flex align-items-center">
+            <span class="me-2 text-muted" style="font-size: 1.25rem;">
+              {% if asset.platform == 'windows' %}
+                <i class="bi bi-windows"></i>
+              {% elsif asset.platform == 'mac-silicon' %}
+                <i class="bi bi-apple"></i>
+              {% elsif asset.platform == 'mac-intel' %}
+                <i class="bi bi-apple"></i>
+              {% elsif asset.platform == 'linux' or asset.platform == 'cross-platform' %}
+                <i class="bi bi-terminal"></i>
+              {% else %}
+                <i class="bi bi-file-zip"></i>
+              {% endif %}
+            </span>
+            <span class="fw-medium">
+              {% if asset.platform == 'windows' %}
+                Windows
+              {% elsif asset.platform == 'mac-silicon' %}
+                Mac (Apple Silicon)
+              {% elsif asset.platform == 'mac-intel' %}
+                Mac (Intel)
+              {% elsif asset.platform == 'linux' %}
+                Linux
+              {% elsif asset.platform == 'cross-platform' %}
+                Linux (ZIP)
+              {% elsif asset.platform == 'full-zip' %}
+                Cross-Platform (ZIP)
+              {% else %}
+                Download
+              {% endif %}
+            </span>
+          </div>
+          <div class="col d-none d-sm-block">
+            <span class="text-muted small">
+              {{ asset.name }}
+              <span class="ms-1">({% assign size_mb = asset.size | divided_by: 1048576 %}{{ size_mb }} MB)</span>
+            </span>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <a href="{{ asset.url }}" class="btn btn-sm btn-primary d-block d-sm-inline-block">
+              <i class="bi bi-download"></i> Download
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
