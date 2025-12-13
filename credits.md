@@ -83,7 +83,7 @@ Graphics adapted from:
 <h5 class="mb-0"><i class="bi bi-heart me-2"></i>Special Thanks</h5>
 </div>
 <div class="card-body">
-<p class="mb-2">Melissa Almeida, Ellis Cain, Saraching Chao, Rick Dale, Cheryl Evry, Ben Fried, Stephanie Gamino, Alfredo Garcia, Carlos Garcia, Mariel Gonzales, Jim Gregoric, Alex Holcombe, Daniel Holman, Tyler Jones, Simon Levy, Matthew Lloyd, Arianna Malakis, Armin Mayrhofer, Andrew Park, Connor Pemberton, Megan Pemberton, Sergio Ponce De Leon, Maria Puglisi, Jeff Rodny, Veer Sahai, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
+<p class="mb-2">Melissa Almeida, Ellis Cain, Saraching Chao, Rick Dale, Cheryl Evry, Ben Fried, Stephanie Gamino, Alfredo Garcia, Carlos Garcia, Mariel Gonzales, Jim Gregoric, Alex Holcombe, Daniel Holman, Tyler Jones, Simon Levy, Matthew Lloyd, Arianna Malakis, Armin Mayrhofer, Andrew Park, Andrew Seal, Connor Pemberton, Megan Pemberton, Sergio Ponce De Leon, Maria Puglisi, Jeff Rodny, Veer Sahai, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
 <p class="text-muted mb-0">Many other students at and visitors to <a href="http://www.ucmerced.edu">UC Merced</a> have provided valuable feedback.</p>
 </div>
 </div>
