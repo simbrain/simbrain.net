@@ -97,7 +97,7 @@ permalink: /downloads/
     
     // Check for Windows
     if (userAgent.includes('windows') || platform.includes('win')) {
-      return { platform: 'windows', message: 'Your browser is running on Windows.' };
+      return { platform: 'windows', message: 'You are running Windows. Note that the Windows app is not signed. When you run the installer, you may need to click \'More info\' and then \'Run Anyway\'. Also, if you upgrade to a new version you may need to uninstall the older one.' };
     }
     
     // Check for Linux
