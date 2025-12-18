@@ -69,6 +69,10 @@ module Jekyll
         'mac-intel'
       when /\.dmg$/
         'mac-silicon'
+      when /aarch64\.appimage$/, /arm64\.appimage$/
+        'linux-appimage-arm64'
+      when /x86_64\.appimage$/, /\.appimage$/
+        'linux-appimage'
       when /_full\.zip$/
         'full-zip'
       when /\.zip$/
