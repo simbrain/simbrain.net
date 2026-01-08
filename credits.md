@@ -55,7 +55,7 @@ permalink: /credits/
 <div class="col-md-6">
 <div class="card border-0 shadow-sm h-100">
 <div class="card-header bg-transparent border-bottom">
-<h5 class="mb-0"><i class="bi bi-git-merge me-2"></i>Pull Request Contributors</h5>
+<h5 class="mb-0"><i class="bi bi-code-square me-2"></i>Pull Request Contributors</h5>
 </div>
 <div class="card-body">
 <p class="mb-0">Akshaj C, Ariel Lavi, Austin Leonardo, Edmund Chao, Alfred Ornelas, Luis Cayetano, Oliver Coleman, Shane Doyle, Daisy Mayorga, Jasmine Lau, Ken Fukuyama, Shreya Shriram, Kanly Thao, Elijah Olson, Carlos Garcia Gomez, Devanshu Kumar, Makenzy Gilbert, Jason Ferry, Dhaval Jani, Dmitri Lopez, David Hack</p>
@@ -149,7 +149,7 @@ Graphics adapted from:
 <h5 class="mb-0"><i class="bi bi-bank me-2"></i>Funding &amp; Grant Support</h5>
 </div>
 <div class="card-body">
-<p class="mb-0 small">Supported by grants from the <strong>Hewlett Foundation</strong> (2005), UC Merced faculty research grants, the <strong>National Science Foundation</strong> (2016–2019): <em>An Analysis of the Consequences of Cortical Structure on Computation</em> (Award #1513779), and <strong><a href="https://uconline.edu/">UC Online</a></strong> (2024).</p>
+<p class="mb-0 small">Supported by grants from the <a href="https://hewlett.org/">Hewlett Foundation</a> (2005), <a href="https://senate.ucmerced.edu/senate_awards">UC Merced faculty research grants</a>, the <a href="https://www.nsf.gov/">National Science Foundation</a> (2016–2019): <em>An Analysis of the Consequences of Cortical Structure on Computation</em> (Award #1513779), and <a href="https://uconline.edu/">UC Online</a> (2024).</p>
 </div>
 </div>
 </div>
