@@ -22,7 +22,6 @@ permalink: /credits/
 <div class="col-md-3 mb-3 mb-md-0">
 <h6 class="text-muted small text-uppercase">Version 4.0</h6>
 <p class="mb-0">Yulin Li, Jeff Yoshimi, Zoë Tosi, Tim Shea</p>
-<small class="text-muted">Also see pull requests for <a href="https://github.com/simbrain/simbrain/pulls?q=is%3Apr+">code</a> and <a href="https://github.com/simbrain/simbraindocs/pulls?q=is%3Apr">docs</a></small>
 </div>
 <div class="col-md-3 mb-3 mb-md-0">
 <h6 class="text-muted small text-uppercase">Version 3.0</h6>
@@ -49,6 +48,18 @@ permalink: /credits/
 </div>
 <div class="card-body">
 <p class="mb-0">Kyle Baron, Ryan Bartley, Jensen Guo, Ashish Gupta, Scott Hotton, Eric Johnson, Jason Laurel, Lam Nguyen, Amanda Pandey, William Benjamin St. Claire, Mai Ngoc Thang, Jonathan Vickrey, Sharai Wilson</p>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card border-0 shadow-sm h-100">
+<div class="card-header bg-transparent border-bottom">
+<h5 class="mb-0"><i class="bi bi-git-merge me-2"></i>Pull Request Contributors</h5>
+</div>
+<div class="card-body">
+<p class="mb-0">Akshaj C, Ariel Lavi, Austin Leonardo, Edmund Chao, Alfred Ornelas, Luis Cayetano, Oliver Coleman, Shane Doyle, Daisy Mayorga, Jasmine Lau, Ken Fukuyama, Shreya Shriram, Kanly Thao, Elijah Olson, Carlos Garcia Gomez, Devanshu Kumar, Makenzy Gilbert, Jason Ferry, Dhaval Jani, Dmitri Lopez, David Hack</p>
+<p class="text-muted small mb-0 mt-2">See all pull requests for <a href="https://github.com/simbrain/simbrain/pulls?q=is%3Apr+">code</a> and <a href="https://github.com/simbrain/simbraindocs/pulls?q=is%3Apr">docs</a></p>
 </div>
 </div>
 </div>
@@ -138,7 +149,7 @@ Graphics adapted from:
 <h5 class="mb-0"><i class="bi bi-bank me-2"></i>Funding &amp; Grant Support</h5>
 </div>
 <div class="card-body">
-<p class="mb-0 small">Supported by grants from the <strong>Hewlett Foundation</strong> (c. 2005), UC Merced faculty research grants, and the <strong>National Science Foundation</strong> (2016–2019): <em>An Analysis of the Consequences of Cortical Structure on Computation</em> (Award #1513779).</p>
+<p class="mb-0 small">Supported by grants from the <strong>Hewlett Foundation</strong> (2005), UC Merced faculty research grants, the <strong>National Science Foundation</strong> (2016–2019): <em>An Analysis of the Consequences of Cortical Structure on Computation</em> (Award #1513779), and <strong><a href="https://uconline.edu/">UC Online</a></strong> (2024).</p>
 </div>
 </div>
 </div>
