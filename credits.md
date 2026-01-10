@@ -58,7 +58,7 @@ permalink: /credits/
 <h5 class="mb-0"><i class="bi bi-code-square me-2"></i>Pull Request Contributors</h5>
 </div>
 <div class="card-body">
-<p class="mb-0">Akshaj C, Ariel Lavi, Austin Leonardo, Edmund Chao, Alfred Ornelas, Luis Cayetano, Oliver Coleman, Shane Doyle, Daisy Mayorga, Jasmine Lau, Ken Fukuyama, Shreya Shriram, Kanly Thao, Elijah Olson, Carlos Garcia Gomez, Devanshu Kumar, Makenzy Gilbert, Jason Ferry, Dhaval Jani, Dmitri Lopez, David Hack</p>
+<p class="mb-0">Akshaj C, Ariel Lavi, Austin Leonardo, Edmund Chao, Alfred Ornelas, Luis Cayetano, Oliver Coleman, Shane Doyle, Daisy Mayorga, Jasmine Lau, Ken Fukuyama, Shreya Shriram, Kanly Thao, Elijah Olson, Carlos Garcia Gomez, Devanshu Kumar, Jason Ferry, Dhaval Jani, Dmitri Lopez, David Hack</p>
 <p class="text-muted small mb-0 mt-2">See all pull requests for <a href="https://github.com/simbrain/simbrain/pulls?q=is%3Apr+">code</a> and <a href="https://github.com/simbrain/simbraindocs/pulls?q=is%3Apr">docs</a></p>
 </div>
 </div>
@@ -94,7 +94,7 @@ Graphics adapted from:
 <h5 class="mb-0"><i class="bi bi-heart me-2"></i>Special Thanks</h5>
 </div>
 <div class="card-body">
-<p class="mb-2">Melissa Almeida, Ellis Cain, Saraching Chao, Rick Dale, Cheryl Evry, Ben Fried, Stephanie Gamino, Olivia Gawell, Alfredo Garcia, Carlos Garcia, Suzanne Garcia, Yasemin Gokcen, Mariel Gonzales, Jim Gregoric, Alex Holcombe, Daniel Holman, Tyler Jones, Chris Kello, Simon Levy, Matthew Lloyd, Arianna Malakis, Armin Mayrhofer, Dave Noelle, Andrew Park, Dulce Pimentel-Hurlburt, Andrew Seal, Connor Pemberton, Megan Pemberton, Sergio Ponce De Leon, Maria Puglisi, Jeff Rodny, Veer Sahai, Michael Spivey, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
+<p class="mb-2">Melissa Almeida, Ellis Cain, Saraching Chao, Rick Dale, Cheryl Evry, Ben Fried, Stephanie Gamino, Olivia Gawell, Alfredo Garcia, Carlos Garcia, Suzanne Garcia, Makenzy Gilbert, Yasemin Gokcen, Mariel Gonzales, Jim Gregoric, Alex Holcombe, Daniel Holman, Tyler Jones, Chris Kello, Simon Levy, Matthew Lloyd, Arianna Malakis, Armin Mayrhofer, Dave Noelle, Andrew Park, Dulce Pimentel-Hurlburt, Andrew Seal, Connor Pemberton, Megan Pemberton, Sergio Ponce De Leon, Maria Puglisi, Jeff Rodny, Veer Sahai, Eric Schwitzgebel, Michael Spivey, Ricardo Velasco, Robert Young, Brandon Zielinski, and members of the Piccolo users group and the Sun forums.</p>
 <p class="text-muted mb-0">Many other students at and visitors to <a href="http://www.ucmerced.edu">UC Merced</a> have provided valuable feedback.</p>
 </div>
 </div>
