@@ -96,13 +96,16 @@ permalink: /downloads/
     
     // Check for Mac
     if (userAgent.includes('mac') || platform.includes('mac')) {
-      // Check for Apple Silicon
-      // Safari on Apple Silicon reports this, or we can check via WebGL
-      if (checkAppleSilicon()) {
+      const siliconCheck = checkAppleSilicon();
+      
+      if (siliconCheck === true) {
         return { platform: 'mac-silicon', message: 'Detected: Mac (Apple Silicon)' };
+      } else if (siliconCheck === false) {
+        return { platform: 'mac-intel', message: 'Detected: Mac (Intel)' };
       }
-      // Default to Intel Mac if we can't determine
-      return { platform: 'mac-intel', message: 'Detected: Mac (Intel)' };
+      
+      // If we can't determine, don't show anything
+      return null;
     }
 
     // Check for Windows
@@ -136,7 +139,13 @@ permalink: /downloads/
         const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
         if (debugInfo) {
           const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toLowerCase();
-          // Apple Silicon GPUs contain "apple" in their name
+          
+          // Intel Macs will have "intel" in the renderer string
+          if (renderer.includes('intel') || renderer.includes('amd')) {
+            return false;
+          }
+          
+          // Apple Silicon has "apple m" (m1, m2, m3, etc.) or "apple gpu"
           if (renderer.includes('apple m') || renderer.includes('apple gpu')) {
             return true;
           }
@@ -145,7 +154,8 @@ permalink: /downloads/
     } catch (e) {
       // Ignore errors
     }
-    return false;
+    // If we can't determine, return null to indicate unknown
+    return null;
   }
 
   // Detect Linux CPU architecture
