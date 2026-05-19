@@ -159,7 +159,8 @@ Graphics adapted from:
 <div class="card-header bg-transparent border-bottom">
 <h5 id="code-signing-policy" class="mb-0"><i class="bi bi-patch-check me-2"></i>Code signing</h5>
 </div>
-<div class="card-body">
+<div class="card-body d-flex align-items-center">
+<img src="https://signpath.org/assets/logo.svg" alt="SignPath Logo" width="96" class="me-3 flex-shrink-0">
 <p class="mb-0 small">Windows releases are signed through <a href="https://about.signpath.io/">SignPath.io</a>, with certificate by <a href="https://signpath.org/">SignPath Foundation</a>. Committers and reviewers: Yulin Li and Jeff Yoshimi; approver: Jeff Yoshimi. Privacy policy: This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.</p>
 </div>
 </div>
