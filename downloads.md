@@ -113,7 +113,8 @@ permalink: /downloads/
       return {
         platform: 'windows',
         message: 'Detected: Windows',
-        detail: 'The Windows installer is currently unsigned. You may need to click "More info" then "Run anyway". When upgrading, uninstall the previous version first.'
+        detail: 'The Windows installer is code signed through SignPath. See the <a href="/credits/#code-signing-policy">Code Signing Policy</a>. When upgrading, uninstall the previous version first.',
+        allowHtml: true
       };
     }
 
@@ -189,14 +190,18 @@ permalink: /downloads/
   }
   
   // Show platform message
-  function showPlatformMessage(message, detail) {
+  function showPlatformMessage(message, detail, allowHtml) {
     const msgContainer = document.getElementById('platform-message');
     const msgText = document.getElementById('platform-text');
     const msgDetail = document.getElementById('platform-detail');
     if (msgContainer && msgText) {
       msgText.textContent = message;
       if (msgDetail) {
-        msgDetail.textContent = detail || '';
+        if (allowHtml) {
+          msgDetail.innerHTML = detail || '';
+        } else {
+          msgDetail.textContent = detail || '';
+        }
         msgDetail.style.display = detail ? 'block' : 'none';
       }
       msgContainer.style.display = 'block';
@@ -207,7 +212,7 @@ permalink: /downloads/
   document.addEventListener('DOMContentLoaded', function() {
     const detected = detectPlatform();
     if (detected) {
-      showPlatformMessage(detected.message, detected.detail);
+      showPlatformMessage(detected.message, detected.detail, detected.allowHtml);
       reorderDownloads(detected.platform);
     }
   });
@@ -222,7 +227,7 @@ permalink: /downloads/
 
 <p class="mt-2 text-muted">
   <a href="https://v3.simbrain.net/Downloads/downloads_main.html" rel="noopener">Simbrain 3.0 Downloads</a>
-
+</p>
 
 {% else %}
 <div class="alert alert-info">
