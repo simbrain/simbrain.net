@@ -113,7 +113,7 @@ permalink: /downloads/
       return {
         platform: 'windows',
         message: 'Detected: Windows',
-        detail: 'The Windows installer is code signed through SignPath. See the <a href="/credits/#code-signing-policy">Code Signing Policy</a>. When upgrading, uninstall the previous version first.',
+        detail: 'The Windows installer is code signed through SignPath. See the <a href="/credits/#code-signing-policy">Code Signing Policy</a>',
         allowHtml: true
       };
     }

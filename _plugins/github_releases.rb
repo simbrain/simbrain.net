@@ -63,7 +63,7 @@ module Jekyll
 
     def detect_platform(filename)
       case filename.downcase
-      when /installer.*\.exe$/, /\.exe$/
+      when /installer.*\.msi$/, /\.msi$/, /installer.*\.exe$/, /\.exe$/
         'windows'
       when /_x64\.dmg$/, /-intel\.dmg$/, /intel.*\.dmg$/i
         'mac-intel'
