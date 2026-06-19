@@ -39,14 +39,16 @@ module Jekyll
               'body' => release['body'],
               'html_url' => release['html_url'],
               'assets' => (release['assets'] || []).map do |asset|
+                platform = detect_platform(asset['name'])
                 {
                   'name' => asset['name'],
                   'url' => asset['browser_download_url'],
                   'size' => asset['size'],
                   'download_count' => asset['download_count'],
-                  'platform' => detect_platform(asset['name'])
+                  'platform' => platform,
+                  'display_name' => platform_display_name(platform)
                 }
-              end
+              end.sort_by { |asset| asset['display_name'].downcase }
             }
           end
 
@@ -82,6 +84,20 @@ module Jekyll
       else
         'other'
       end
+    end
+
+    def platform_display_name(platform)
+      {
+        'windows' => 'Windows',
+        'mac-silicon' => 'Mac (Apple Silicon)',
+        'mac-intel' => 'Mac (Intel)',
+        'linux-appimage' => 'Linux (AppImage)',
+        'linux-appimage-arm64' => 'Linux ARM64 (AppImage)',
+        'linux' => 'Linux',
+        'cross-platform' => 'Linux (ZIP)',
+        'full-zip' => 'Cross-Platform (ZIP)',
+        'other' => 'Download'
+      }.fetch(platform, 'Download')
     end
   end
 end

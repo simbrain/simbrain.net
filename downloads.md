@@ -41,27 +41,7 @@ permalink: /downloads/
                 <i class="bi bi-file-zip"></i>
               {% endif %}
             </span>
-            <span class="fw-medium">
-              {% if asset.platform == 'windows' %}
-                Windows
-              {% elsif asset.platform == 'mac-silicon' %}
-                Mac (Apple Silicon)
-              {% elsif asset.platform == 'mac-intel' %}
-                Mac (Intel)
-              {% elsif asset.platform == 'linux-appimage' %}
-                Linux (AppImage)
-              {% elsif asset.platform == 'linux-appimage-arm64' %}
-                Linux ARM64 (AppImage)
-              {% elsif asset.platform == 'linux' %}
-                Linux
-              {% elsif asset.platform == 'cross-platform' %}
-                Linux (ZIP)
-              {% elsif asset.platform == 'full-zip' %}
-                Cross-Platform (ZIP)
-              {% else %}
-                Download
-              {% endif %}
-            </span>
+            <span class="fw-medium">{{ asset.display_name }}</span>
           </div>
           <div class="col d-none d-sm-block">
             <span class="text-muted small">
@@ -176,16 +156,15 @@ permalink: /downloads/
     return 'x86_64';
   }
   
-  // Reorder download cards to put detected platform first
+  // Keep the detected platform first; source data is already alphabetical
   function reorderDownloads(detectedPlatform) {
     const container = document.getElementById('download-cards');
     if (!container) return;
     
     const items = Array.from(container.querySelectorAll('.download-item'));
     const matchingItem = items.find(item => item.dataset.platform === detectedPlatform);
-    
+
     if (matchingItem) {
-      // Move matching item to the beginning
       container.insertBefore(matchingItem, container.firstChild);
       // Add a highlight effect
       matchingItem.querySelector('.card')?.classList.add('border-primary', 'border-2');
@@ -214,9 +193,9 @@ permalink: /downloads/
   // Initialize on page load
   document.addEventListener('DOMContentLoaded', function() {
     const detected = detectPlatform();
+    reorderDownloads(detected?.platform);
     if (detected) {
       showPlatformMessage(detected.message, detected.detail, detected.allowHtml);
-      reorderDownloads(detected.platform);
     }
   });
 })();
