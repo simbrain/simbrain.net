@@ -146,8 +146,11 @@ permalink: /downloads/
             return false;
           }
           
-          // Apple Silicon has "apple m" (m1, m2, m3, etc.) or "apple gpu"
-          if (renderer.includes('apple m') || renderer.includes('apple gpu')) {
+          // Apple Silicon reports a specific chip, e.g. "apple m1"/"apple m2".
+          // Note: Safari masks the renderer to a generic "Apple GPU" on ALL
+          // Macs (Intel included) for anti-fingerprinting, so that string is
+          // ambiguous and must NOT be treated as Apple Silicon.
+          if (renderer.includes('apple m')) {
             return true;
           }
         }
