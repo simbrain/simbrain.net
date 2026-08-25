@@ -6,6 +6,8 @@ permalink: /braitenberg.html
 
 <p class="lead">By <a href="http://scotton.freeshell.org">Scott Hotton</a> and <a href="https://jeffyoshimi.net/">Jeff Yoshimi</a></p>
 
+Resources to support [*The Open Dynamics of Braitenberg Vehicles*](https://mitpress.mit.edu/9780262548199/the-open-dynamics-of-braitenberg-vehicles/).
+
 ## Python code
 
 Python code for studying the system and recreating most figures in the book is available in these scripts:
@@ -19,6 +21,6 @@ Feel free to copy, modify, and run the scripts yourself.
 
 ## Simbrain
 
-The current version of Simbrain includes a Braitenberg simulation. After opening Simbrain, select **Simulations → Agents → Braitenberg**.
+The current version of Simbrain includes several Braitenberg simulations. After opening Simbrain, select **Simulations → Braitenberg**. The simulation **Two Braitenberg Vehicles** is directly based on the book.
 
 [Download Simbrain](/downloads/){: .btn .btn-primary }
