@@ -10,8 +10,9 @@
     h1 { font-size: 1.5rem; }
     label { display: block; margin-bottom: .4rem; }
     .input-row { display: flex; }
-    input { border: 1px solid #767676; border-radius: .25rem 0 0 .25rem; flex: 1; font: inherit; min-width: 0; padding: .5rem .7rem; }
+    .input-row input { border: 1px solid #767676; border-radius: .25rem 0 0 .25rem; flex: 1; font: inherit; min-width: 0; padding: .5rem .7rem; }
     button { background: #0d6efd; border: 1px solid #0d6efd; border-radius: 0 .25rem .25rem 0; color: white; cursor: pointer; font: inherit; padding: .5rem .8rem; }
+    .option { display: flex; align-items: center; gap: .4rem; margin: .6rem 0 0; }
     .error { color: #b02a37; margin-top: .35rem; }
     .logic-expression { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 1.25rem; font-weight: 600; overflow-wrap: anywhere; }
     .hidden { display: none; }
@@ -28,6 +29,7 @@
       <button type="submit">Generate</button>
     </div>
     <div class="error hidden" id="student-id-error">Please enter a student ID.</div>
+    <label class="option"><input id="advanced" type="checkbox"> Advanced version (may need two hidden layers)</label>
   </form>
 
   <p id="expression" class="logic-expression hidden" aria-live="polite"></p>
@@ -39,6 +41,7 @@
     const input = document.getElementById('student-id');
     const error = document.getElementById('student-id-error');
     const expressionElement = document.getElementById('expression');
+    const advanced = document.getElementById('advanced');
 
     // A small deterministic hash keeps this entirely static while making each
     // student ID produce the same result whenever the page is reopened.
@@ -75,7 +78,10 @@
       return letters.slice(0, 4);
     }
 
-    function makeExpression(random, letters) {
+    // The basic version always uses ((A op B) op (C op D)), which needs only one
+    // hidden layer. The advanced version allows all five groupings, some of
+    // which need two hidden layers.
+    function makeExpression(random, letters, isAdvanced) {
       const operations = [
         { word: 'and' },
         { word: 'or' }
@@ -91,7 +97,8 @@
 
       const leaves = letters.map(leaf);
       // The five possible binary-tree arrangements give the connectives varied grouping.
-      switch (Math.floor(random() * 5)) {
+      const shape = isAdvanced ? Math.floor(random() * 5) : 2;
+      switch (shape) {
         case 0: return combine(combine(combine(leaves[0], leaves[1]), leaves[2]), leaves[3]);
         case 1: return combine(combine(leaves[0], combine(leaves[1], leaves[2])), leaves[3]);
         case 2: return combine(combine(leaves[0], leaves[1]), combine(leaves[2], leaves[3]));
@@ -103,7 +110,7 @@
     function generate(studentId) {
       const random = seededRandom(hashId(studentId));
       const letters = shuffledLetters(random);
-      const expression = makeExpression(random, letters);
+      const expression = makeExpression(random, letters, advanced.checked);
       expressionElement.textContent = expression.text;
       expressionElement.classList.remove('hidden');
     }
@@ -114,6 +121,12 @@
       const isValid = studentId.length > 0;
       error.classList.toggle('hidden', isValid);
       if (isValid) generate(studentId);
+    });
+
+    // Switching versions updates a proposition that is already showing.
+    advanced.addEventListener('change', () => {
+      const studentId = input.value.trim();
+      if (studentId.length > 0 && !expressionElement.classList.contains('hidden')) generate(studentId);
     });
   })();
 </script>
