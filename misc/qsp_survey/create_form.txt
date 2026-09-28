@@ -1,0 +1,311 @@
+// Paste into a project at https://script.google.com/ and run createQspSurvey.
+// Companion to the poster "Clarifying and Contextualizing the Qualia Structure Paradigm".
+
+// To rebuild an existing form in place (keeping its public link), set FORM_ID to the
+// ID in its edit URL: https://docs.google.com/forms/d/<FORM_ID>/edit
+// Leave it empty to create a new unpublished draft form instead.
+const FORM_ID = '';
+
+// The history chart is fetched from the site, so deploy the site before running.
+// If the fetch fails, the form is still created; add the image by hand in the editor.
+const CHART_URL = 'https://simbrain.net/misc/qsp_survey/history_chart.png';
+
+function createQspSurvey() {
+  const form = openOrCreateForm();
+  form.setTitle('Qualia Structure Paradigm (QSP) Survey');
+  form.setDescription(
+    'QSP is still taking shape. This survey is a temperature check on how people ' +
+    'view it, to inform discussion and a chapter I am writing for our collective ' +
+    'volume. It follows the poster "Clarifying and Contextualizing the Qualia ' +
+    'Structure Paradigm" (Jeff Yoshimi, UC Merced).\n\n' +
+    'Every question is optional, so do as little or as much as you like. Each ' +
+    'question has a box to say more, and comments are especially welcome.\n\n' +
+    'If you are at the poster right now, please put stickers on it too. It is fun!\n\n' +
+    'This is a small, informal survey. Results may be summarized in the chapter or ' +
+    'in talks, and short comments may be quoted. You can set your quoting ' +
+    'preference on the last page.'
+  );
+  form.setProgressBar(true);
+  form.setConfirmationMessage(
+    'Thank you! If you are at the poster, do not forget the stickers.'
+  );
+
+  aboutYou(form);
+  essentialOrOptional(form);
+  openQuestions(form);
+  historyChart(form);
+  finalThoughts(form);
+
+  Logger.log('Edit the form: ' + form.getEditUrl());
+  Logger.log('Use Preview in the form editor to try it.');
+}
+
+// Rebuilding deletes every question, so refuse if the form already has responses.
+function openOrCreateForm() {
+  if (!FORM_ID) {
+    return FormApp.create('Qualia Structure Paradigm (QSP) Survey', false);
+  }
+  const form = FormApp.openById(FORM_ID);
+  const count = form.getResponses().length;
+  if (count > 0) {
+    throw new Error('The form has ' + count + ' responses. Delete them on the ' +
+      'Responses tab before rebuilding, or leave FORM_ID empty to make a new form.');
+  }
+  form.getItems().forEach(function (item) {
+    form.deleteItem(item);
+  });
+  return form;
+}
+
+function aboutYou(form) {
+  form.addSectionHeaderItem().setTitle('About you');
+
+  form.addTextItem()
+    .setTitle('Name')
+    .setHelpText('Optional. Leave it blank or check the box below to stay anonymous.');
+  form.addCheckboxItem()
+    .setTitle('Anonymity')
+    .setChoiceValues(['Please keep me anonymous']);
+
+  form.addMultipleChoiceItem()
+    .setTitle('How did you find this survey?')
+    .setChoiceValues(['At the poster, in person', 'A shared link or QR code'])
+    .showOtherOption(true);
+
+  multipleChoiceWithComment(form, {
+    title: 'Which best describes your relationship to QSP?',
+    choices: [
+      'I actively do QSP research',
+      'I contribute to QSP discussions (e.g., workshops or the collective volume)',
+      'I follow QSP with interest',
+      'I am skeptical or critical of QSP',
+      'I am new to QSP'
+    ],
+    other: true,
+    comment: 'your relationship to QSP'
+  });
+
+  scaleWithComment(form, {
+    title: 'How committed are you to QSP as a research program?',
+    low: 'Not at all committed',
+    high: 'Fully committed',
+    comment: 'your commitment to QSP'
+  });
+
+  form.addCheckboxItem()
+    .setTitle('What are your main fields? (Check all that apply)')
+    .setChoiceValues([
+      'Psychology',
+      'Neuroscience',
+      'Philosophy',
+      'Mathematics',
+      'Computer science / AI',
+      'Physics'
+    ])
+    .showOtherOption(true);
+}
+
+function essentialOrOptional(form) {
+  form.addPageBreakItem()
+    .setTitle('1. Essential or optional?')
+    .setHelpText(
+      'For each item, is it essential to QSP or optional? Use the middle (3) for ' +
+      '"not sure" or "it depends." If you think an item does not belong in QSP at ' +
+      'all, choose Optional and say so in the comment.'
+    );
+
+  [
+    ['Use of relational judgments', 'relational judgments'],
+    ['Use of mathematics', 'mathematics'],
+    ['Use of neuroscience', 'neuroscience'],
+    ['Use of computational modeling', 'computational modeling'],
+    ['Category theory', 'category theory'],
+    ['Some kind of ontology (e.g., relationalism)', 'ontology'],
+    ['IIT (Integrated Information Theory)', 'IIT'],
+    ['Solves or narrows the hard problem', 'the hard problem']
+  ].forEach(function (item) {
+    scaleWithComment(form, {
+      title: item[0],
+      low: 'Essential',
+      high: 'Optional',
+      comment: item[1]
+    });
+  });
+
+  form.addParagraphTextItem()
+    .setTitle('Is anything essential to QSP missing from this list?');
+}
+
+function openQuestions(form) {
+  form.addPageBreakItem().setTitle('2. Open questions');
+
+  scaleWithComment(form, {
+    title: 'Can QSP use the same methods for complex experiences that it does for simple ones?',
+    help:
+      'Most QSP work so far studies simple experiences like colors, tones, and ' +
+      'odors. Complex experiences might include having a conversation, ' +
+      'ruminating, flow states in sports or music, indeterminate moods, and ' +
+      'hunches. 3 = not sure.',
+    low: 'Strong yes',
+    high: 'Strong no',
+    commentTitle:
+      'How could QSP handle experiences like these? Would that still be QSP?'
+  });
+
+  scaleWithComment(form, {
+    title: 'Is QSP pluralist about theories of consciousness?',
+    help: 'Does QSP fit many theories of consciousness, or is it a theory of its own? 3 = fits a few.',
+    low: 'Fits many theories',
+    high: 'Its own theory',
+    comment: 'QSP and theories of consciousness'
+  });
+
+  scaleWithComment(form, {
+    title: 'Is QSP substrate independent?',
+    help: 'People read this question in different ways. Please say how you read it in the comment. 3 = not sure.',
+    low: 'Strong yes',
+    high: 'Strong no',
+    comment: 'substrate independence'
+  });
+
+  form.addParagraphTextItem()
+    .setTitle('How should QSP study the internal structure of the field of consciousness?')
+    .setHelpText('For example, how experiences are organized together at a moment: foreground and background, spatial layout, or the unity of the field.');
+
+  form.addParagraphTextItem()
+    .setTitle('What other structural relations besides similarity should QSP study?')
+    .setHelpText('For example, part–whole, order, betweenness, temporal succession, or dependence.');
+}
+
+function historyChart(form) {
+  form.addPageBreakItem()
+    .setTitle('3. Historical precedents (and help me with my diagram!)')
+    .setHelpText(
+      'The chapter discusses QSP\'s many precedents, including psychophysics, ' +
+      'phenomenology, Gestalt psychology, and RSA. The chart below places these ' +
+      'threads in a larger narrative. It is a rough draft, and all suggestions ' +
+      'are welcome, including dropping it.'
+    );
+
+  addChartImage(form);
+
+  // Asked before the narrative is described, since readers interpret the y-axis differently.
+  form.addParagraphTextItem()
+    .setTitle('Before reading further: what did you take the vertical (y) axis to mean?');
+
+  scaleWithComment(form, {
+    title: 'How well does the chart\'s story match your understanding of the history?',
+    help:
+      'The intended story: a once-unified science of consciousness fragmented ' +
+      'during the behaviorist era and is now being reintegrated, with new ' +
+      'influences, especially from mathematics and computer science.',
+    low: 'Not at all',
+    high: 'Very well',
+    comment: 'the historical narrative'
+  });
+
+  multipleChoiceWithComment(form, {
+    title: 'What should the threads represent?',
+    choices: [
+      'Disciplines (e.g., psychology, mathematics, neuroscience)',
+      'Movements or traditions (e.g., psychophysics, phenomenology, Gestalt psychology, RSA)',
+      'A mix of both',
+      'Not sure'
+    ],
+    comment: 'what the threads represent'
+  });
+
+  form.addCheckboxItem()
+    .setTitle('Which threads should be added? (Check all that apply)')
+    .setHelpText('For example, philosophy is not on the chart now.')
+    .setChoiceValues([
+      'Philosophy',
+      'Computer science / AI',
+      'Mathematical and computational models from cognitive science',
+      'Category theory (as its own thread)',
+      'Physics'
+    ])
+    .showOtherOption(true);
+
+  form.addParagraphTextItem()
+    .setTitle('Thoughts on any specific threads?')
+    .setHelpText('For example, when a thread should start, split off, or rejoin, or which threads should be removed.');
+
+  multipleChoiceWithComment(form, {
+    title: 'The threads are all the same thickness now. Should thickness change over time (e.g., grow as a field grows)?',
+    choices: ['Yes', 'No, keep it constant', 'Not sure'],
+    comment: 'thread thickness'
+  });
+
+  multipleChoiceWithComment(form, {
+    title: 'Braids are hard to draw and can be hard to read. What visual style would work best?',
+    choices: [
+      'Keep the braids',
+      'Simpler streams or parallel lines (e.g., a subway-map style)',
+      'Drop the chart and use a table or timeline instead'
+    ],
+    other: true,
+    comment: 'visual style'
+  });
+
+  form.addParagraphTextItem()
+    .setTitle('Which dates or events, if any, should be marked?')
+    .setHelpText('The vertical lines (1900, behaviorism, the cognitive revolution, consciousness studies, 2000) are just reference markers. They can be changed or removed.');
+}
+
+function finalThoughts(form) {
+  form.addPageBreakItem().setTitle('Final thoughts');
+
+  form.addParagraphTextItem()
+    .setTitle('Is there anything we missed, or anything else you would like to share about QSP, the poster, or the chapter?');
+
+  form.addMultipleChoiceItem()
+    .setTitle('May I quote your comments?')
+    .setChoiceValues([
+      'Yes, with my name',
+      'Yes, but anonymously',
+      'No, only report my answers in summary form'
+    ]);
+
+  form.addTextItem()
+    .setTitle('Email for follow-up')
+    .setHelpText('Optional. Only if you are happy to be contacted about your answers.');
+}
+
+// A 1–5 scale followed by an optional comment box. Pass `comment` for a
+// "Say more: ..." box or `commentTitle` for a custom prompt.
+function scaleWithComment(form, q) {
+  const scale = form.addScaleItem()
+    .setTitle(q.title)
+    .setBounds(1, 5)
+    .setLabels(q.low, q.high);
+  if (q.help) {
+    scale.setHelpText(q.help);
+  }
+  addComment(form, q);
+}
+
+function multipleChoiceWithComment(form, q) {
+  form.addMultipleChoiceItem()
+    .setTitle(q.title)
+    .setChoiceValues(q.choices)
+    .showOtherOption(!!q.other);
+  addComment(form, q);
+}
+
+// Distinct titles keep the response spreadsheet columns readable.
+function addComment(form, q) {
+  form.addParagraphTextItem()
+    .setTitle(q.commentTitle || 'Say more: ' + q.comment);
+}
+
+function addChartImage(form) {
+  try {
+    const blob = UrlFetchApp.fetch(CHART_URL).getBlob();
+    form.addImageItem()
+      .setImage(blob)
+      .setTitle('Draft history chart');
+  } catch (e) {
+    Logger.log('Could not fetch the chart (' + e + '). Add it by hand from ' + CHART_URL);
+  }
+}
