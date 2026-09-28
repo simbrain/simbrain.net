@@ -8,7 +8,7 @@ A side project under `misc/`; see [../README.md](../README.md) for how these fol
 - Public URL: https://simbrain.net/misc/qsp_survey/
 - Form script: [create_form.txt](create_form.txt)
 - History chart used by the form: [history_chart.png](history_chart.png)
-- Google Form (public link): https://docs.google.com/forms/d/e/1FAIpQLScb8LwfMHEEJgPFnSZOIWplt8631o8_7FyM-tqPkqCvx5zZUA/viewform. This started as a test form and is meant to be rebuilt in place by the script.
+- Google Form (public link): https://docs.google.com/forms/d/e/1FAIpQLScQsN3BN38gYJGAn6d3iDYzw_9SWbRiip4w89BIaEaelO4w-g/viewform. This form is now edited directly in the Google Forms editor. Edits there go live immediately and do not change the link. If the form gets much longer or shorter, update the iframe `height` in `index.html`.
 
 ## Going live
 
