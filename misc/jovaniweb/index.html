@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jovani's Funhouse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sunburst" aria-hidden="true"></div>
+  <div id="floaties" aria-hidden="true"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <header class="hero">
+    <h1 id="title" aria-label="Jovani's Funhouse">Jovani's Funhouse</h1>
+    <p class="tagline">🎪 Step right up! Beat FUNBOT at Pong! 🎪</p>
+  </header>
+
+  <main>
+    <section class="marquee" id="marquee" aria-label="Pong game">
+      <div class="bulbs" id="bulbs" aria-hidden="true"></div>
+      <div class="unicorn" id="unicorn" aria-hidden="true">
+        <div class="rainbow-beam"></div>
+        <div class="unicorn-say" id="unicorn-say"></div>
+        <svg class="unicorn-svg" viewBox="0 0 120 120">
+          <path d="M28 68 C 8 58, 4 80, 14 92 C 18 98, 12 104, 4 103" fill="none" stroke="#ff2fd6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M28 72 C 14 68, 12 84, 19 95" fill="none" stroke="#00f0ff" stroke-width="5" stroke-linecap="round"/>
+          <path d="M29 75 C 20 76, 20 88, 25 96" fill="none" stroke="#ffe600" stroke-width="4" stroke-linecap="round"/>
+          <rect x="30" y="80" width="9" height="30" rx="4" fill="#efe4ff"/>
+          <rect x="44" y="82" width="9" height="28" rx="4" fill="#fff"/>
+          <rect x="62" y="82" width="9" height="28" rx="4" fill="#efe4ff"/>
+          <rect x="75" y="80" width="9" height="30" rx="4" fill="#fff"/>
+          <rect x="30" y="104" width="9" height="7" rx="2" fill="#b14bff"/>
+          <rect x="44" y="104" width="9" height="7" rx="2" fill="#b14bff"/>
+          <rect x="62" y="104" width="9" height="7" rx="2" fill="#b14bff"/>
+          <rect x="75" y="104" width="9" height="7" rx="2" fill="#b14bff"/>
+          <ellipse cx="56" cy="74" rx="33" ry="19" fill="#fff"/>
+          <path d="M68 66 L80 34 L97 38 L88 72 Z" fill="#fff"/>
+          <circle cx="83" cy="27" r="7" fill="#ff2fd6"/>
+          <circle cx="79" cy="35" r="7" fill="#ff7b00"/>
+          <circle cx="76" cy="43" r="6.5" fill="#ffe600"/>
+          <circle cx="73" cy="51" r="6" fill="#39ff14"/>
+          <circle cx="70" cy="59" r="5.5" fill="#00f0ff"/>
+          <circle cx="68" cy="66" r="5" fill="#b14bff"/>
+          <ellipse cx="96" cy="40" rx="17" ry="11" transform="rotate(28 96 40)" fill="#fff"/>
+          <polygon points="81,31 83,17 90,28" fill="#fff"/>
+          <polygon points="83,28 84,21 88,28" fill="#ffb3ec"/>
+          <polygon points="86,31 94,28 104,4" fill="#ffd400"/>
+          <path d="M90.5 24 L95.5 23 M93.5 19 L97.5 18 M96 14 L99 13.5" stroke="#d99a00" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="95" cy="37" r="2.8" fill="#2a0a5e"/>
+          <circle cx="95.9" cy="36.1" r="0.9" fill="#fff"/>
+          <circle cx="100" cy="43" r="3.2" fill="#ff2fd6" opacity="0.45"/>
+          <circle cx="106" cy="46" r="1" fill="#2a0a5e"/>
+        </svg>
+        <span class="horn-tip"></span>
+      </div>
+      <div class="game-wrap">
+        <div class="scoreboard">
+          <div class="side you"><span class="label">YOU</span><span class="num" id="score-player">0</span></div>
+          <div class="vs">VS</div>
+          <div class="side bot"><span class="num" id="score-cpu">0</span><span class="label">FUNBOT 🤖</span></div>
+        </div>
+        <div class="arena">
+          <canvas id="pong" width="800" height="500" aria-label="Pong game. Move your paddle with the mouse, touch, W and S, or the arrow keys."></canvas>
+          <div class="overlay show" id="overlay" aria-live="polite">
+            <div class="overlay-big" id="overlay-big">READY?</div>
+            <div class="overlay-small" id="overlay-small">Click, tap, or press Space to serve</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="controls">
+      <button id="sound-btn" class="btn btn-cyan" type="button">🔊 Sound: On</button>
+      <button id="party-btn" class="btn btn-pink" type="button">🥳 Party Mode</button>
+      <button id="reset-btn" class="btn btn-yellow" type="button">🔄 New Game</button>
+    </div>
+    <p class="hint">
+      <span class="hint-mouse">Move: mouse / W S / ↑ ↓ &nbsp;·&nbsp; Serve: click or Space &nbsp;·&nbsp; Pause: P</span>
+      <span class="hint-touch">Drag on the game to move &nbsp;·&nbsp; Tap to serve</span>
+      &nbsp;·&nbsp; First to 7 wins! &nbsp;·&nbsp; Block twice in a row for a surprise 🦄
+    </p>
+  </main>
+
+  <footer>Made with 💖 &amp; JavaScript &nbsp;·&nbsp; Psst… try typing <kbd>jovani</kbd></footer>
+
+  <script src="main.js"></script>
+  <script src="pong.js"></script>
+</body>
+</html>
