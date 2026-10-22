@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Archived longer version of the competitive net game page.">
+<style>
+html { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>The Competitive Net Game</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with one wide "lab bench" band for the interactive figure. */
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #15181d;
+  --ink-2: #4a505a;
+  --ink-3: #7c838e;
+  --rule: #dde1e7;
+  --input: #2a78d6;      /* input patterns: blue, as in the book figure */
+  --weight: #d93f3e;     /* fan-in weight vectors: red, as in the book figure */
+  --warn: #d97706;
+  --seq-2: #86b6ef; --seq-3: #3987e5; --seq-4: #1c5cab; --seq-5: #0d366b;
+  --seq-ink-2: #0b0b0b; --seq-ink-3: #ffffff; --seq-ink-4: #ffffff; --seq-ink-5: #ffffff;
+  --display: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121418; --panel: #1b1e24; --ink: #eceef2; --ink-2: #b4bac4; --ink-3: #848b96; --rule: #2e333b;
+  --input: #4d93e8; --weight: #ec6463; --warn: #f59e0b;
+  --seq-2: #184f95; --seq-3: #2a78d6; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+  --seq-ink-2: #ffffff; --seq-ink-3: #ffffff; --seq-ink-4: #0b0b0b; --seq-ink-5: #0b0b0b;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121418; --panel: #1b1e24; --ink: #eceef2; --ink-2: #b4bac4; --ink-3: #848b96; --rule: #2e333b;
+  --input: #4d93e8; --weight: #ec6463; --warn: #f59e0b;
+  --seq-2: #184f95; --seq-3: #2a78d6; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+  --seq-ink-2: #ffffff; --seq-ink-3: #ffffff; --seq-ink-4: #0b0b0b; --seq-ink-5: #0b0b0b;
+  color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); }
+.wrap { max-width: 1060px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px; }
+.prose { max-width: 68ch; display: grid; gap: 14px; }
+.prose p { margin: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; }
+h2 { font-size: 24px; line-height: 1.25; }
+h3 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+.lede { font-size: 19px; color: var(--ink-2); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+section { display: grid; gap: 18px; }
+
+/* pattern strip */
+.strip { display: grid; gap: 6px; width: max-content; max-width: 100%; }
+.strip-row { display: grid; grid-template-columns: 34px repeat(7, 26px); gap: 4px; align-items: center; }
+.strip-row span { font-family: var(--mono); font-size: 13px; color: var(--ink-2); }
+.cell { width: 26px; height: 26px; border-radius: 4px; border: 1px solid var(--rule); background: var(--panel); }
+.cell.on { background: var(--input); border-color: var(--input); }
+.strip-axis span { font-size: 11px; color: var(--ink-3); text-align: center; }
+
+/* bench */
+.bench { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; display: grid; gap: 18px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.group-label { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-right: 4px; }
+button, select { font: 600 14px var(--display); color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 7px 11px; cursor: pointer; }
+button:hover { border-color: var(--ink-3); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--input); outline-offset: 2px; }
+button.pat { color: var(--input); border-color: color-mix(in srgb, var(--input) 45%, var(--rule)); min-width: 44px; }
+button.pat.last { background: var(--input); color: #fff; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.bench-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .bench-grid { grid-template-columns: minmax(0, 1fr); } }
+canvas { width: 100%; display: block; border-radius: 6px; background: var(--bg); }
+.caption { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+.score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.score b { font: 700 40px/1 var(--display); font-variant-numeric: tabular-nums; }
+.score span { color: var(--ink-2); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--mono); font-size: 13px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule); }
+.chip.shared { border-color: var(--weight); color: var(--weight); }
+.resp { border-collapse: collapse; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; width: 100%; }
+.resp th { font-weight: 600; color: var(--ink-2); padding: 4px; text-align: center; }
+.resp th.u { color: var(--weight); text-align: left; }
+.resp td { text-align: center; padding: 6px 2px; border: 2px solid var(--panel); border-radius: 4px; }
+.resp td.win { outline: 2px solid var(--weight); outline-offset: -2px; font-weight: 600; }
+.resp td.lbl { text-align: left; color: var(--ink-3); font-size: 12px; white-space: nowrap; }
+.side { display: grid; gap: 16px; min-width: 0; }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+
+/* facts */
+.facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+@media (max-width: 760px) { .facts { grid-template-columns: minmax(0, 1fr); } }
+.fig { overflow-x: auto; }
+.fig svg { display: block; width: 100%; max-width: 460px; height: auto; }
+
+/* outcome chart */
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.bars { display: grid; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 3.2rem; gap: 12px; align-items: center; }
+@media (max-width: 600px) { .bar-row { grid-template-columns: minmax(0, 1fr) 3.2rem; } .bar-row .name { grid-column: 1 / -1; } }
+.bar-row .name { font-size: 14px; line-height: 1.3; color: var(--ink); }
+.bar-row .name small { display: block; color: var(--ink-3); font-size: 12px; }
+.bar { display: flex; gap: 2px; height: 24px; }
+.seg-b { height: 100%; display: flex; align-items: center; justify-content: center; font: 600 11px var(--mono); overflow: hidden; }
+.seg-b:first-child { border-radius: 4px 0 0 4px; } .seg-b:last-child { border-radius: 0 4px 4px 0; }
+.mean { font: 600 14px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.bar-head { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 3.2rem; gap: 12px; font: 12px var(--mono); color: var(--ink-3); }
+@media (max-width: 600px) { .bar-head { display: none; } }
+.divider { height: 1px; background: var(--rule); margin: 4px 0; }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px/1.4 var(--mono);
+  padding: 6px 8px; border-radius: 6px; z-index: 5; max-width: 260px; }
+ul.take { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.group-head { font: 600 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.facts .fig h3 { margin-bottom: 6px; }
+a { color: var(--input); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="prose">
+    <p class="caption" style="border:1px solid var(--rule);border-radius:8px;padding:10px 12px">Archive: the longer working version of this page, kept for reference. It includes material cut from the <a href="./">current page</a>: the two-input panel, why committing works, strategy statistics and hard mode.</p>
+    <div class="eyebrow">Competitive learning · Simbrain “Competitive network (simple)”</div>
+    <h1>The Competitive Net Game</h1>
+    <p class="lede">A competitive network sorts its inputs into groups by letting output units compete for them. This page starts with a two-input version you can see completely, then plays the game from the Simbrain simulation: give each of five patterns its own output unit.</p>
+  </header>
+
+  <section>
+    <div class="prose">
+      <h2>Start with two inputs</h2>
+      <p>Here is a competitive network small enough to see completely: two input nodes, five patterns (P1 to P5) and five output units (O1 to O5), as in the Simbrain game. Each output unit’s two weights make a red arrow from the origin, and each pattern is a blue arrow. Press a pattern to present it. The unit with the largest weighted input wins, and only the winner learns: it turns toward that input.</p>
+    </div>
+    <div class="bench">
+      <div class="controls">
+        <div class="group"><span class="group-label">Train</span>
+          <button class="pat" data-p="0">P1</button><button class="pat" data-p="1">P2</button><button class="pat" data-p="2">P3</button><button class="pat" data-p="3">P4</button><button class="pat" data-p="4">P5</button>
+        </div>
+        <div class="group seg" role="group" aria-label="Repetitions per click"><span class="group-label">per click</span>
+          <button id="sp-rep1" aria-pressed="true">×1</button><button id="sp-rep10" aria-pressed="false">×10</button>
+        </div>
+        <div class="group"><span class="group-label">rate</span>
+          <select id="sp-lr" aria-label="Learning rate"><option value="0.05">0.05</option><option value="0.1" selected>0.1</option><option value="0.2">0.2</option><option value="0.5">0.5</option></select>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="group seg" role="group" aria-label="How weights are scaled"><span class="group-label">weights</span>
+          <button id="sp-sum" aria-pressed="true">Sum to 1 (Simbrain)</button><button id="sp-len" aria-pressed="false">Length 1 (sphere)</button>
+        </div>
+        <div class="group">
+          <button id="sp-rr">Take turns ×10 rounds</button>
+          <button id="sp-reset">New random weights</button>
+          <button id="sp-start">Back to the example</button>
+        </div>
+        <span class="meta" id="sp-meta"></span>
+      </div>
+      <div class="bench-grid">
+        <div>
+          <canvas id="sp-cv" aria-label="Two-input weight space showing patterns and output units"></canvas>
+          <p class="caption">Under Sum to 1, every unit sits on the straight segment. Under Length 1, every unit sits on the quarter circle. Dashed lines join each pattern to its winner, and faint red lines trace where each unit has been. You can also click a pattern on the plot.</p>
+        </div>
+        <div class="side">
+          <div class="score"><b id="sp-score">0</b><span>patterns won by a unit that is not the one pointing closest</span></div>
+          <div style="overflow-x:auto"><table class="resp" id="sp-table"></table></div>
+          <p class="caption">Weighted input to each unit from each pattern. Outlined cells are the winners. The last column gives each unit’s weight length.</p>
+        </div>
+      </div>
+    </div>
+    <div class="prose">
+      <p>Under <b>Sum to 1</b>, O1 wins P1 to P3 and O5 wins P4 and P5. O2, O3 and O4 win nothing, even though each points almost straight at a pattern. Training can’t fix this: with two inputs, only the unit furthest toward each end of the segment can win, so at most two units ever have patterns. Switch to <b>Length 1</b> and each pattern goes to the unit pointing closest to it, which here gives every pattern its own unit.</p>
+      <p>The reason: a unit’s weighted input is (weight length) × (input length) × cos(angle between them). For a given input, its own length is the same for every unit, so the winner is the unit with the largest weight length × cos(angle). If every unit has length 1, only the angle matters. The unit pointing closest wins, which is also the nearest point, and that is the textbook picture. Simbrain, following Rumelhart and Zipser, scales each unit’s weights to <i>sum</i> to 1 instead. That puts them on the straight segment, where lopsided units are longer (up to 1.0) than balanced ones (0.71). With two inputs this is enough for the most lopsided unit on each side to win everything on that side.</p>
+      <p>Rumelhart and Zipser said so themselves. Their sphere picture “is only approximate. We have used the constraint that Σw = 1 rather than the constraint that Σw² = 1. This latter constraint would ensure that all vectors are in fact the same length” (<a href="https://doi.org/10.1207/s15516709cog0901_5"><i>Feature discovery by competitive learning</i></a>, 1985, footnote 3). With more inputs the effect is much milder. In the seven-input game below, with fresh random weights, the winner is not the nearest unit for about one pattern in five, and once units are trained the two rules mostly agree.</p>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2>The game: seven inputs, five patterns</h2>
+    <p>The Simbrain simulation uses the same rule with seven input nodes and five output units. Each pattern turns on three of the seven input nodes, and any two patterns share exactly one active node.</p>
+    <div class="strip" aria-label="The five input patterns">
+      <div class="strip-row strip-axis"><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+      <div id="strip"></div>
+    </div>
+    <p>Each output unit has seven fan-in weights, so its weight vector is a point in the same 7-dimensional space as the inputs. The weights start random and are scaled to sum to 1. When a pattern is presented, the unit with the largest weighted input wins. Only the winner learns: its weights move a fraction of the way (the learning rate, 0.1 here) toward the input, scaled to sum to 1 as well.</p>
+  </section>
+
+  <section>
+    <div class="prose">
+      <h2>Play it in input space</h2>
+      <p>Blue points are the five patterns, red points are the five units’ weight vectors, and dashed lines join each pattern to the unit that currently wins it. Clicking a pattern trains on it, like selecting a pattern in Simbrain and pressing <code>Train</code>. Try taking turns first, then try something else.</p>
+    </div>
+    <div class="bench">
+      <div class="controls">
+        <div class="group"><span class="group-label">Train</span>
+          <button class="pat" data-p="0" id="b0">P1</button><button class="pat" data-p="1" id="b1">P2</button><button class="pat" data-p="2" id="b2">P3</button><button class="pat" data-p="3" id="b3">P4</button><button class="pat" data-p="4" id="b4">P5</button>
+        </div>
+        <div class="group seg" role="group" aria-label="Repetitions per click"><span class="group-label">per click</span>
+          <button id="rep1" aria-pressed="true">×1</button><button id="rep10" aria-pressed="false">×10</button>
+        </div>
+        <div class="group"><span class="group-label">rate</span>
+          <select id="lr" aria-label="Learning rate"><option value="0.05">0.05</option><option value="0.1" selected>0.1</option><option value="0.2">0.2</option><option value="0.5">0.5</option></select>
+        </div>
+        <div class="group"><span class="group-label">patterns</span>
+          <select id="pset" aria-label="Pattern set"><option value="fano" selected>Share one input (the sim)</option><option value="slide">Sliding window (hard mode)</option></select>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="group">
+          <button id="rr">Take turns ×10 rounds</button>
+          <button id="reset">New random weights</button>
+          <button id="lucky">Deal a lucky start</button>
+        </div>
+        <span class="meta" id="meta"></span>
+      </div>
+      <div class="bench-grid">
+        <div>
+          <canvas id="cv" aria-label="Input space projection showing patterns and weight vectors"></canvas>
+          <p class="caption" id="proj-cap"></p>
+        </div>
+        <div class="side">
+          <div class="score"><b id="score">3</b><span>of 5 patterns have their own unit</span></div>
+          <div class="chips" id="chips"></div>
+          <div>
+            <h3>Weighted input to each unit</h3>
+            <div style="overflow-x:auto"><table class="resp" id="resp"></table></div>
+          </div>
+          <p class="caption">Outlined cells are the winner for each pattern. The right column lists the patterns each unit wins now, which is what the labels in Simbrain track.</p>
+          <p class="meta" id="setdesc"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="prose">
+      <h2>Why taking turns fails and committing works</h2>
+      <p>An untrained unit has its weight spread over all seven inputs, so it gives every pattern about <b>0.43</b> (three of seven equal shares). That dashed line is the bar any trained unit has to stay under to let a pattern go.</p>
+    </div>
+    <div class="facts">
+      <div class="fig" id="fig-commit"></div>
+      <div class="fig" id="fig-half"></div>
+    </div>
+    <div class="prose">
+      <p>A unit trained all the way onto P1 responds 1.0 to P1 and 0.33 to every other pattern, because each shares one input with P1. That is under the line, so the other patterns go to other units.</p>
+      <p>A unit that wins both P1 and P2 and gets trained on them in turn settles halfway between them. Halfway gives each of the two patterns about 0.67, well over the line, so the unit keeps both. Training P1 many times in a row pulls it off the halfway point, and its response to P2 sinks until some other unit takes P2.</p>
+      <p>How many repeats count as many depends on the learning rate. Each step closes a tenth of the remaining distance at 0.1, so ten to twenty steps on one pattern usually does it.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="prose">
+      <h2>How often does each strategy win?</h2>
+      <p>Measured with Simbrain’s own competitive network code: 2,000 random starts per row, five units, learning rate 0.1 unless noted, then each pattern tested without learning. The bars show how many patterns ended up with their own unit.</p>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section class="prose">
+    <h2>Hard mode: patterns that share two inputs</h2>
+    <p>Switch the patterns above to <b>Sliding window</b>. Now each pattern is three neighboring inputs (123, 234, …, 567), so neighbors share two of their three inputs. A unit trained onto P3 gives P2 and P4 about 0.67, which is over the line, so it holds on to its neighbors no matter how you train. Committing no longer helps, and the result is mostly decided by the random starting weights. The <code>Competitive grid network</code> simulation in Simbrain is a hard mode as well: its pictures overlap heavily, so committing usually gets four units but almost never five.</p>
+    <p>The general rule: a trained unit gives another pattern (shared inputs ÷ active inputs). An untrained one gives about (active inputs ÷ total inputs). A strategy can separate two patterns only when the first number is smaller.</p>
+  </section>
+
+  <section class="prose">
+    <h2>What to take from it</h2>
+    <ul class="take">
+      <li>Competitive learning is greedy. Whoever wins a pattern first moves toward it and becomes even more likely to win it again, so the random starting weights matter.</li>
+      <li>A unit that wins nothing never learns. Such dead units are the classic failure of competitive learning. Committing other units to their own patterns is what gives dead units a chance.</li>
+      <li>How similar the inputs are decides whether training order can fix a bad start. With little overlap it can. With a lot of overlap it cannot, and the network lumps similar patterns together.</li>
+      <li>Normalization keeps every unit’s weights summing to 1. Without it, a trained unit’s weights keep growing and it ends up winning everything.</li>
+    </ul>
+    <p class="caption">Try it in <a href="https://simbrain.net">Simbrain</a> under Simulations › Competitive › Competitive network (simple).</p>
+  </section>
+</div>
+<div id="tip" hidden></div>
+<script>
+(() => {
+  const SLIDE = [0,1,2,3,4].map(i => [0,1,2,3,4,5,6].map(j => (j >= i && j < i + 3) ? 1 : 0));
+  const FANO = [[0,1,3],[1,2,4],[2,3,5],[3,4,6],[4,5,0]].map(t => [0,1,2,3,4,5,6].map(j => t.includes(j) ? 1 : 0));
+  const SETS = {
+    slide: { P: SLIDE, M: [0.06667, 0.13333, 0.2, 0.2, 0.2, 0.13333, 0.06667],
+      A1: [-0.26096, -0.46471, -0.46471, 0, 0.46471, 0.46471, 0.26096],
+      A2: [0.37796, 0.18898, -0.18898, -0.75593, -0.18898, 0.18898, 0.37796],
+      box: [-0.54, 0.54, -0.36, 0.42],
+      caption: "A 2D projection (principal components of the five patterns, 86% of their variance). Neighboring patterns sit close together." },
+    fano: (() => {
+      const X = FANO.map(p => p.map(v => v / 3)), M = [0,1,2,3,4,5,6].map(j => X.reduce((s, x) => s + x[j], 0) / 5);
+      const ax = f => { const a = [0,1,2,3,4,5,6].map(j => X.reduce((s, x, i) => s + f(Math.PI / 2 + 2 * Math.PI * i / 5) * (x[j] - M[j]), 0));
+        const n = Math.hypot(...a); return a.map(v => v / n); };
+      return { P: FANO, M, A1: ax(Math.cos), A2: ax(Math.sin), box: [-0.45, 0.45, -0.36, 0.42],
+        caption: "A 2D view chosen so the five patterns form a regular pentagon. In 7D every pair of patterns is the same distance apart." };
+    })(),
+  };
+  let P, M, A1, A2, X0, X1, Y0, Y1;
+  const UNITS = ["O1", "O2", "O3", "O4", "O5"];
+  const digits = p => p.map((v, j) => v ? j + 1 : null).filter(Boolean).join("");
+
+  const strip = document.getElementById("strip");
+  FANO.forEach((row, i) => {
+    const r = document.createElement("div"); r.className = "strip-row";
+    r.innerHTML = `<span>P${i + 1}</span>` + row.map(v => `<div class="cell${v ? " on" : ""}"></div>`).join("");
+    strip.appendChild(r);
+  });
+
+  let seed = 7;
+  const rand = () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  let W, trails, steps, lastP = -1, reps = 1, note = "";
+  const dot = (w, x) => w.reduce((s, v, i) => s + v * x[i], 0);
+  const proj = w => [dot(w.map((v, i) => v - M[i]), A1), dot(w.map((v, i) => v - M[i]), A2)];
+  const randomW = () => UNITS.map(() => { const u = Array.from({ length: 7 }, rand); const s = u.reduce((a, b) => a + b); return u.map(v => v / s); });
+  const winners = w => P.map(p => { let b = 0; w.forEach((u, k) => { if (dot(u, p) > dot(w[b], p)) b = k; }); return b; });
+  const distinct = w => new Set(winners(w)).size;
+
+  function start(w, msg) { W = w; trails = W.map(u => [proj(u)]); steps = 0; lastP = -1; note = msg || ""; render(); }
+  function train(p, n) {
+    const lr = +document.getElementById("lr").value;
+    for (let k = 0; k < n; k++) {
+      const w = winners(W)[p], t = P[p].map(v => v / 3);
+      W[w] = W[w].map((v, i) => v + lr * (t[i] - v));
+      trails[w].push(proj(W[w])); if (trails[w].length > 400) trails[w].shift();
+      steps++;
+    }
+    lastP = p; note = ""; render();
+  }
+
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  function draw() {
+    const cw = cv.clientWidth, ch = Math.round(cw * (Y1 - Y0) / (X1 - X0)), dpr = window.devicePixelRatio || 1;
+    cv.style.height = ch + "px"; cv.width = cw * dpr; cv.height = ch * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const sx = x => (x - X0) / (X1 - X0) * cw, sy = y => (Y1 - y) / (Y1 - Y0) * ch;
+    const ink = css("--ink"), ink3 = css("--ink-3"), rule = css("--rule"), blue = css("--input"), red = css("--weight"), bg = css("--bg");
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.strokeStyle = rule; ctx.lineWidth = 1;
+    for (let g = Math.ceil(X0 * 10) / 10; g <= X1; g += 0.1) { ctx.beginPath(); ctx.moveTo(sx(g), 0); ctx.lineTo(sx(g), ch); ctx.stroke(); }
+    for (let g = Math.ceil(Y0 * 10) / 10; g <= Y1; g += 0.1) { ctx.beginPath(); ctx.moveTo(0, sy(g)); ctx.lineTo(cw, sy(g)); ctx.stroke(); }
+    const pts = P.map(p => proj(p.map(v => v / 3)));
+    const win = winners(W);
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = ink3; ctx.lineWidth = 1.5;
+    pts.forEach((q, i) => { const u = proj(W[win[i]]); ctx.beginPath(); ctx.moveTo(sx(q[0]), sy(q[1])); ctx.lineTo(sx(u[0]), sy(u[1])); ctx.stroke(); });
+    ctx.setLineDash([]);
+    trails.forEach(tr => { if (tr.length < 2) return; ctx.strokeStyle = red; ctx.globalAlpha = 0.45; ctx.lineWidth = 2; ctx.beginPath();
+      tr.forEach((q, i) => i ? ctx.lineTo(sx(q[0]), sy(q[1])) : ctx.moveTo(sx(q[0]), sy(q[1]))); ctx.stroke(); ctx.globalAlpha = 1; });
+    const font = Math.max(11, Math.min(13, cw / 45));
+    pts.forEach((q, i) => {
+      const x = sx(q[0]), y = sy(q[1]);
+      ctx.fillStyle = blue; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = ink; ctx.font = `600 ${font}px "IBM Plex Mono", monospace`; ctx.textAlign = "center";
+      const len = Math.hypot(q[0], q[1]) || 1;
+      ctx.textBaseline = "middle"; ctx.fillText(`P${i + 1}`, x + q[0] / len * 26, y - q[1] / len * 26); ctx.textBaseline = "alphabetic";
+    });
+    W.forEach((u, k) => {
+      const q = proj(u), x = sx(q[0]), y = sy(q[1]);
+      ctx.fillStyle = red; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 10, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 10px "Libre Franklin", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(UNITS[k], x, y + 0.5); ctx.textBaseline = "alphabetic";
+    });
+  }
+
+  function render() {
+    const win = winners(W), n = new Set(win).size;
+    document.getElementById("score").textContent = n;
+    const counts = {}; win.forEach(w => counts[w] = (counts[w] || 0) + 1);
+    document.getElementById("chips").innerHTML = win.map((w, i) =>
+      `<span class="chip${counts[w] > 1 ? " shared" : ""}">P${i + 1} → ${UNITS[w]}</span>`).join("");
+    const blue = css("--input");
+    let h = `<tr><th></th>${P.map((_, i) => `<th>P${i + 1}</th>`).join("")}<th style="text-align:left">wins</th></tr>`;
+    W.forEach((u, k) => {
+      const mine = win.map((w, i) => w === k ? `P${i + 1}` : null).filter(Boolean);
+      h += `<tr><th class="u">${UNITS[k]}</th>` + P.map((p, i) => {
+        const v = dot(u, p), a = Math.round(Math.min(1, v) * 70);
+        return `<td class="${win[i] === k ? "win" : ""}" style="background:color-mix(in srgb, ${blue} ${a}%, transparent);color:${a > 42 ? "#fff" : "inherit"}">${v.toFixed(2)}</td>`;
+      }).join("") + `<td class="lbl">${mine.length ? mine.join(" ") : "none (dead)"}</td></tr>`;
+    });
+    document.getElementById("resp").innerHTML = h;
+    document.getElementById("cv").closest(".bench").querySelectorAll("button.pat").forEach(b => b.classList.toggle("last", +b.dataset.p === lastP));
+    document.getElementById("meta").textContent = `${steps} training steps${note ? " · " + note : ""}`;
+    draw();
+  }
+
+  function useSet(name) {
+    const s = SETS[name];
+    ({ P, M, A1, A2 } = s); [X0, X1, Y0, Y1] = s.box;
+    document.getElementById("proj-cap").textContent = s.caption + " Winners are computed in the full 7D space with the sim’s own rule, so a dashed line can point to a red dot that looks farther away than another.";
+    document.getElementById("setdesc").textContent = "Active inputs: " + P.map((p, i) => `P${i + 1} ${digits(p)}`).join(" · ");
+    let w0; do { w0 = randomW(); } while (distinct(w0) !== 3);
+    start(w0);
+  }
+
+  document.getElementById("cv").closest(".bench").querySelectorAll("button.pat").forEach(b => b.addEventListener("click", () => train(+b.dataset.p, reps)));
+  const setReps = r => { reps = r; document.getElementById("rep1").setAttribute("aria-pressed", r === 1); document.getElementById("rep10").setAttribute("aria-pressed", r === 10); };
+  document.getElementById("rep1").onclick = () => setReps(1);
+  document.getElementById("rep10").onclick = () => setReps(10);
+  document.getElementById("rr").onclick = () => { for (let c = 0; c < 10; c++) for (let p = 0; p < 5; p++) train(p, 1); lastP = -1; render(); };
+  document.getElementById("reset").onclick = () => start(randomW());
+  document.getElementById("lucky").onclick = () => { let d = 0, w; do { w = randomW(); d++; } while (distinct(w) < 5); start(w, `took ${d} deals`); };
+  document.getElementById("pset").onchange = e => useSet(e.target.value);
+  useSet("fano");
+  new ResizeObserver(draw).observe(cv);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  function profile(el, title, vals, hi, caption) {
+    const pw = 440, ph = 230, pl = 40, pr = 12, pt = 16, pb = 34, bw = (pw - pl - pr) / 5;
+    const py = v => pt + (1 - v) * (ph - pt - pb);
+    let s = `<h3>${title}</h3><svg viewBox="0 0 ${pw} ${ph}" role="img" aria-label="${title}: ${vals.map((v, i) => `P${i + 1} ${v.toFixed(2)}`).join(", ")}. An untrained unit gives about 0.43 to every pattern.">`;
+    [0, 0.5, 1].forEach(g => s += `<line x1="${pl}" x2="${pw - pr}" y1="${py(g)}" y2="${py(g)}" stroke="var(--rule)"/><text x="${pl - 8}" y="${py(g) + 4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink-3)">${g.toFixed(1)}</text>`);
+    vals.forEach((v, i) => {
+      const x = pl + i * bw + bw * 0.22, w = bw * 0.56, y = py(v);
+      s += `<path d="M${x},${py(0)} V${y + 4} q0,-4 4,-4 H${x + w - 4} q4,0 4,4 V${py(0)} Z" fill="var(--weight)" opacity="${hi.includes(i) ? 1 : 0.55}"/>`;
+      s += `<text x="${x + w / 2}" y="${y - 6}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--ink)">${v.toFixed(2)}</text>`;
+      s += `<text x="${x + w / 2}" y="${ph - 12}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink-2)">P${i + 1}</text>`;
+    });
+    s += `<line x1="${pl}" x2="${pw - pr}" y1="${py(3 / 7)}" y2="${py(3 / 7)}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/>`;
+    s += `<text x="${pw - pr}" y="${py(3 / 7) - 8}" text-anchor="end" font-family="Source Serif 4, Georgia, serif" font-size="13" fill="var(--ink)">untrained unit ≈ 0.43</text>`;
+    s += `</svg><p class="caption">${caption}</p>`;
+    document.getElementById(el).innerHTML = s;
+  }
+  profile("fig-commit", "Committed to P1", [1, 1 / 3, 1 / 3, 1 / 3, 1 / 3], [0], "Every other pattern falls under the line, so other units can take them.");
+  profile("fig-half", "Halfway between P1 and P2", [2 / 3, 2 / 3, 1 / 3, 1 / 3, 1 / 3], [0, 1], "P1 and P2 both stay over the line, so this unit keeps both.");
+
+  const rows = [
+    ["Starting weights", "before any training", [2.5, 36.8, 53.2, 7.6], 3.66],
+    ["Take turns", "P1–P5 in order, 20 rounds", [0.9, 25.2, 60.7, 13.3], 3.86],
+    ["Random clicking", "100 steps", [0.1, 10.2, 63.9, 25.9], 4.16],
+    ["Commit ×10", "each pattern 10 times in a row", [0.0, 0.7, 36.1, 63.3], 4.63],
+    ["Commit ×20", "each pattern 20 times in a row", [0.0, 0.0, 9.8, 90.2], 4.90],
+    ["Take turns, then commit ×20", "a bad start can be rescued", [0.0, 0.0, 13.2, 86.8], 4.87],
+    "Parameters (right-click the network in Simbrain and choose Edit)",
+    ["Learning rate 0.5", "take turns", [0.0, 2.8, 51.4, 45.8], 4.43],
+    ["Learning rate 0.05", "commit ×20 (×40 gets 90%)", [0.0, 0.5, 36.7, 62.8], 4.62],
+    ["Normalize inputs off", "commit ×20, one unit wins all", [100.0, 0.0, 0.0, 0.0], 1.00],
+    ["Leaky learning on", "commit ×20", [0.0, 0.0, 3.9, 96.1], 4.96],
+    ["Six units", "take turns", [0.3, 13.7, 60.2, 25.8], 4.11],
+    "Hard mode: sliding window patterns",
+    ["Starting weights", "before any training", [7.3, 51.0, 38.4, 3.3], 3.38],
+    ["Take turns", "20 rounds", [8.2, 57.2, 32.5, 2.1], 3.29],
+    ["Commit ×20", "makes it worse", [18.2, 61.3, 20.5, 0.0], 3.02],
+  ];
+  const segs = [["2 or fewer", "--seq-2"], ["3", "--seq-3"], ["4", "--seq-4"], ["all 5", "--seq-5"]];
+  document.getElementById("legend").innerHTML = `<span style="color:var(--ink-3);font-family:var(--mono);font-size:12px">patterns with their own unit</span>` +
+    segs.map(([l, c]) => `<span><i style="background:var(${c})"></i>${l}</span>`).join("");
+  let bh = `<div class="bar-head"><span>strategy</span><span>share of starts</span><span style="text-align:right">mean</span></div>`;
+  rows.forEach(r => {
+    if (typeof r === "string") { bh += `<div class="divider"></div><div class="group-head">${r}</div>`; return; }
+    const [name, sub, d, mean] = r;
+    bh += `<div class="bar-row"><div class="name">${name}<small>${sub}</small></div><div class="bar">` +
+      d.map((v, i) => v <= 0 ? "" : `<div class="seg-b" data-tip="${name} (${sub}): ${segs[i][0]} in ${v.toFixed(1)}% of starts" style="flex:${v} 0 0;background:var(${segs[i][1]});color:var(--seq-ink-${i + 2})">${v >= 9 ? Math.round(v) + "%" : ""}</div>`).join("") +
+      `</div><div class="mean">${mean.toFixed(2)}</div></div>`;
+  });
+  document.getElementById("bars").innerHTML = bh;
+  const tip = document.getElementById("tip");
+  document.getElementById("bars").addEventListener("mousemove", e => {
+    const t = e.target.closest("[data-tip]"); if (!t) { tip.hidden = true; return; }
+    tip.textContent = t.dataset.tip; tip.hidden = false;
+    tip.style.left = Math.min(e.clientX + 12, innerWidth - 270) + "px"; tip.style.top = (e.clientY + 14) + "px";
+  });
+  document.getElementById("bars").addEventListener("mouseleave", () => tip.hidden = true);
+})();
+</script>
+<script>
+(() => {
+  const DEG = Math.PI / 180, IN = [10, 30, 40, 55, 80], NAMES = ["O1", "O2", "O3", "O4", "O5"];
+  const EXAMPLE = [3, 24, 46, 62, 87];
+  let mode = "sum", W, trails, steps = 0, lastP = -1, reps = 1, note = "";
+  const scale = (v, m) => { const s = m === "sum" ? v[0] + v[1] : Math.hypot(v[0], v[1]); return [v[0] / s, v[1] / s]; };
+  const dir = a => [Math.cos(a * DEG), Math.sin(a * DEG)];
+  const ang = v => Math.atan2(v[1], v[0]) / DEG;
+  const X = () => IN.map(a => scale(dir(a), mode));
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  const winner = x => W.reduce((b, w, k) => dot(w, x) > dot(W[b], x) ? k : b, 0);
+  const closest = x => W.reduce((b, w, k) => Math.abs(ang(w) - ang(x)) < Math.abs(ang(W[b]) - ang(x)) ? k : b, 0);
+  const start = (angles, msg) => { W = angles.map(a => scale(dir(a), mode)); trails = W.map(w => [w]); steps = 0; lastP = -1; note = msg || ""; render(); };
+
+  function train(p, n) {
+    const lr = +document.getElementById("sp-lr").value;
+    for (let i = 0; i < n; i++) {
+      const x = X()[p], k = winner(x);
+      W[k] = scale([W[k][0] + lr * (x[0] - W[k][0]), W[k][1] + lr * (x[1] - W[k][1])], mode);
+      trails[k].push(W[k]); if (trails[k].length > 400) trails[k].shift();
+      steps++;
+    }
+    lastP = p; note = ""; render();
+  }
+
+  const cv = document.getElementById("sp-cv"), ctx = cv.getContext("2d");
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let hits = [];
+
+  function draw() {
+    const cw = cv.clientWidth, ch = Math.round(Math.min(cw * 0.78, 460)), dpr = window.devicePixelRatio || 1;
+    cv.style.height = ch + "px"; cv.width = cw * dpr; cv.height = ch * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const pad = 30, S = Math.min(cw - 2 * pad, ch - 2 * pad) / 1.12, ox = (cw - S * 1.12) / 2 + 8, oy = ch - pad;
+    const sx = x => ox + x * S, sy = y => oy - y * S;
+    const ink = css("--ink"), ink3 = css("--ink-3"), rule = css("--rule"), blue = css("--input"), red = css("--weight"), bg = css("--bg");
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.strokeStyle = rule; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx(0), sy(1.1)); ctx.lineTo(sx(0), sy(0)); ctx.lineTo(sx(1.1), sy(0)); ctx.stroke();
+    ctx.fillStyle = ink3; ctx.font = `12px "IBM Plex Mono", monospace`; ctx.textAlign = "center";
+    ctx.fillText("input 1", sx(1.0), sy(0) + 20); ctx.save(); ctx.translate(sx(0) - 16, sy(1.0)); ctx.rotate(-Math.PI / 2); ctx.fillText("input 2", 0, 0); ctx.restore();
+        ctx.strokeStyle = ink; ctx.lineWidth = 2.5; ctx.beginPath();
+    if (mode === "sum") { ctx.moveTo(sx(1), sy(0)); ctx.lineTo(sx(0), sy(1)); } else ctx.arc(sx(0), sy(0), S, -Math.PI / 2, 0);
+    ctx.stroke(); ctx.fillStyle = ink3; ctx.textAlign = "left";
+    if (mode === "len") ctx.fillText("length = 1", sx(0.76) + 8, sy(0.76) - 6);
+    const xs = X(); hits = [];
+    xs.forEach(x => { ctx.strokeStyle = blue; ctx.globalAlpha = 0.3; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx(0), sy(0)); ctx.lineTo(sx(x[0]), sy(x[1])); ctx.stroke(); ctx.globalAlpha = 1; });
+    trails.forEach(tr => { if (tr.length < 2) return; ctx.strokeStyle = red; ctx.globalAlpha = 0.35; ctx.lineWidth = 3; ctx.beginPath();
+      tr.forEach((w, i) => i ? ctx.lineTo(sx(w[0]), sy(w[1])) : ctx.moveTo(sx(w[0]), sy(w[1]))); ctx.stroke(); ctx.globalAlpha = 1; });
+    W.forEach(w => { ctx.strokeStyle = red; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx(0), sy(0)); ctx.lineTo(sx(w[0]), sy(w[1])); ctx.stroke(); });
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = ink3; ctx.lineWidth = 1.5;
+    xs.forEach(x => {
+      const w = W[winner(x)], ax = sx(x[0]), ay = sy(x[1]), bx = sx(w[0]), by = sy(w[1]);
+      const mx = (ax + bx) / 2, my = (ay + by) / 2, dx = mx - sx(0), dy = my - sy(0), dl = Math.hypot(dx, dy) || 1;
+      const bend = Math.min(60, Math.hypot(bx - ax, by - ay) * 0.45);
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(mx + dx / dl * bend, my + dy / dl * bend, bx, by); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+    xs.forEach((x, i) => {
+      const px = sx(x[0]), py = sy(x[1]);
+      ctx.fillStyle = blue; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 10, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 10px "Libre Franklin", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(`P${i + 1}`, px, py + 0.5); ctx.textBaseline = "alphabetic";
+      hits.push([px, py, i]);
+    });
+    W.forEach((w, k) => {
+      const px = sx(w[0]), py = sy(w[1]);
+      ctx.fillStyle = red; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 10, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 10px "Libre Franklin", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(NAMES[k], px, py + 0.5); ctx.textBaseline = "alphabetic";
+    });
+  }
+
+  function render() {
+    const xs = X(), blue = css("--input"); let bad = 0;
+    let h = `<tr><th></th>${xs.map((_, i) => `<th>P${i + 1}</th>`).join("")}<th style="text-align:left">length</th></tr>`;
+    W.forEach((w, k) => {
+      h += `<tr><th class="u">${NAMES[k]}</th>` + xs.map(x => {
+        const v = dot(w, x) / Math.hypot(x[0], x[1]), a = Math.round(Math.min(1, v) * 60);
+        return `<td class="${winner(x) === k ? "win" : ""}" style="background:color-mix(in srgb, ${blue} ${a}%, transparent);color:${a > 42 ? "#fff" : "inherit"}">${v.toFixed(2)}</td>`;
+      }).join("") + `<td class="lbl">${Math.hypot(w[0], w[1]).toFixed(2)}</td></tr>`;
+    });
+    xs.forEach(x => { if (winner(x) !== closest(x)) bad++; });
+    document.getElementById("sp-table").innerHTML = h;
+    document.getElementById("sp-score").textContent = bad;
+    document.getElementById("sp-sum").setAttribute("aria-pressed", mode === "sum");
+    document.getElementById("sp-len").setAttribute("aria-pressed", mode === "len");
+    document.querySelectorAll("#sp-bench button.pat").forEach(b => b.classList.toggle("last", +b.dataset.p === lastP));
+    document.getElementById("sp-meta").textContent = `${steps} training steps${note ? " · " + note : ""}`;
+    draw();
+  }
+
+  const bench = document.getElementById("sp-cv").closest(".bench"); bench.id = "sp-bench";
+  bench.querySelectorAll("button.pat").forEach(b => b.addEventListener("click", () => train(+b.dataset.p, reps)));
+  const setReps = r => { reps = r; document.getElementById("sp-rep1").setAttribute("aria-pressed", r === 1); document.getElementById("sp-rep10").setAttribute("aria-pressed", r === 10); };
+  document.getElementById("sp-rep1").onclick = () => setReps(1);
+  document.getElementById("sp-rep10").onclick = () => setReps(10);
+  const setMode = m => { mode = m; W = W.map(w => scale(w, mode)); trails = W.map(w => [w]); render(); };
+  document.getElementById("sp-sum").onclick = () => setMode("sum");
+  document.getElementById("sp-len").onclick = () => setMode("len");
+  document.getElementById("sp-rr").onclick = () => { for (let c = 0; c < 10; c++) for (let p = 0; p < IN.length; p++) train(p, 1); lastP = -1; render(); };
+  document.getElementById("sp-reset").onclick = () => start(NAMES.map(() => 2 + Math.random() * 86));
+  document.getElementById("sp-start").onclick = () => start(EXAMPLE);
+  cv.addEventListener("click", e => {
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    const hit = hits.find(([px, py]) => Math.hypot(px - mx, py - my) < 18); if (hit) train(hit[2], reps);
+  });
+  start(EXAMPLE);
+  new ResizeObserver(draw).observe(cv);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+</body>
+</html>

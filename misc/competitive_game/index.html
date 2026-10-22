@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Supplemental tutorial for Simbrain's Competitive network (simple) simulation, with an interactive view of the input space.">
+<style>
+html { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>The Competitive Net Game</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one full-width column with a "lab bench" panel for the interactive figure. */
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #15181d;
+  --ink-2: #4a505a;
+  --ink-3: #7c838e;
+  --rule: #dde1e7;
+  --input: #2a78d6;      /* input patterns: blue, as in the book figure */
+  --weight: #d93f3e;     /* fan-in weight vectors: red, as in the book figure */
+  --warn: #d97706;
+  --good: #15803d;
+  --seq-2: #86b6ef; --seq-3: #3987e5; --seq-4: #1c5cab; --seq-5: #0d366b;
+  --seq-ink-2: #0b0b0b; --seq-ink-3: #ffffff; --seq-ink-4: #ffffff; --seq-ink-5: #ffffff;
+  --display: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121418; --panel: #1b1e24; --ink: #eceef2; --ink-2: #b4bac4; --ink-3: #848b96; --rule: #2e333b;
+  --input: #4d93e8; --weight: #ec6463; --warn: #f59e0b; --good: #4ade80;
+  --seq-2: #184f95; --seq-3: #2a78d6; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+  --seq-ink-2: #ffffff; --seq-ink-3: #ffffff; --seq-ink-4: #0b0b0b; --seq-ink-5: #0b0b0b;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121418; --panel: #1b1e24; --ink: #eceef2; --ink-2: #b4bac4; --ink-3: #848b96; --rule: #2e333b;
+  --input: #4d93e8; --weight: #ec6463; --warn: #f59e0b; --good: #4ade80;
+  --seq-2: #184f95; --seq-3: #2a78d6; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+  --seq-ink-2: #ffffff; --seq-ink-3: #ffffff; --seq-ink-4: #0b0b0b; --seq-ink-5: #0b0b0b;
+  color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); }
+.wrap { max-width: 1060px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px; }
+.prose { display: grid; gap: 14px; }
+.prose p { margin: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; }
+h2 { font-size: 24px; line-height: 1.25; }
+h3 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+.lede { font-size: 19px; color: var(--ink-2); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+section { display: grid; gap: 18px; }
+
+/* pattern strip */
+.strip { display: grid; gap: 6px; width: max-content; max-width: 100%; }
+.strip-row { display: grid; grid-template-columns: 9.5em repeat(7, 26px); gap: 6px; align-items: center; }
+.strip-row span { font-family: var(--mono); font-size: 13px; color: var(--ink-2); }
+.cell { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule); background: var(--panel); }
+.cell.on { background: var(--input); border-color: var(--input); }
+
+/* bench */
+.bench { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; display: grid; gap: 18px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.group-label { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-right: 4px; }
+button, select { font: 600 14px var(--display); color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 7px 11px; cursor: pointer; }
+button:hover { border-color: var(--ink-3); }
+button:disabled { opacity: 0.45; cursor: default; border-color: var(--rule); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--input); outline-offset: 2px; }
+button.pat { color: var(--input); border-color: color-mix(in srgb, var(--input) 45%, var(--rule)); min-width: 44px; }
+button.pat.last { background: var(--input); color: #fff; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.bench-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .bench-grid { grid-template-columns: minmax(0, 1fr); } }
+canvas { width: 100%; display: block; border-radius: 6px; background: var(--bg); }
+.caption { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+.meter-wrap { position: relative; display: grid; gap: 8px; padding: 12px; border: 1px solid var(--rule); border-radius: 8px; transition: border-color .3s, box-shadow .3s; }
+.meter-wrap.full { border-color: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 25%, transparent); }
+.meter-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; color: var(--ink-2); font-size: 15px; }
+.meter-head b { font: 700 28px/1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.meter { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.meter i { height: 16px; border-radius: 4px; background: var(--rule); transition: background .25s; }
+.meter i.on { background: var(--good); }
+.meter i.pop { animation: grow .45s ease-out; }
+.banner.pop { animation: rise .5s ease-out; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes grow { 0% { transform: scaleY(1); } 40% { transform: scaleY(1.6); filter: brightness(1.3); } 100% { transform: scaleY(1); } }
+.meter.shake { animation: shake .35s; }
+@keyframes shake { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.banner { font-size: 15px; color: var(--ink); }
+.banner b { color: var(--good); font-family: var(--display); font-size: 18px; }
+.confetti { position: absolute; left: 50%; top: 40%; width: 7px; height: 10px; border-radius: 2px; pointer-events: none; animation: burst 1.2s ease-out forwards; }
+@keyframes burst { from { transform: translate(0, 0) rotate(0); opacity: 1; } to { transform: translate(var(--dx), calc(var(--dy) + 90px)) rotate(var(--r)); opacity: 0; } }
+.resp { border-collapse: separate; border-spacing: 3px; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; width: 100%; }
+.resp th { font-weight: 600; color: var(--ink-2); padding: 2px 4px; text-align: center; }
+.resp th.u { color: var(--weight); }
+.resp td { text-align: center; padding: 6px 3px; border-radius: 4px; background: var(--bg); color: var(--ink-2); }
+.resp td.win { background: var(--weight); color: #fff; }
+.resp td.lbl { background: none; text-align: left; font-size: 12px; white-space: nowrap; }
+.resp td.lbl.own { color: var(--good); } .resp td.lbl.shared { color: var(--ink-3); }
+.more { display: grid; gap: 10px; }
+.more summary { cursor: pointer; font: 600 14px var(--display); color: var(--ink-2); }
+.more[open] summary { margin-bottom: 8px; }
+.more .caption { margin: 0 0 8px; }
+.side { display: grid; gap: 16px; min-width: 0; }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+
+/* facts */
+.facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+@media (max-width: 760px) { .facts { grid-template-columns: minmax(0, 1fr); } }
+.fig { overflow-x: auto; }
+.fig svg { display: block; width: 100%; max-width: 460px; height: auto; }
+
+/* outcome chart */
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.bars { display: grid; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 3.2rem; gap: 12px; align-items: center; }
+@media (max-width: 600px) { .bar-row { grid-template-columns: minmax(0, 1fr) 3.2rem; } .bar-row .name { grid-column: 1 / -1; } }
+.bar-row .name { font-size: 14px; line-height: 1.3; color: var(--ink); }
+.bar-row .name small { display: block; color: var(--ink-3); font-size: 12px; }
+.bar { display: flex; gap: 2px; height: 24px; }
+.seg-b { height: 100%; display: flex; align-items: center; justify-content: center; font: 600 11px var(--mono); overflow: hidden; }
+.seg-b:first-child { border-radius: 4px 0 0 4px; } .seg-b:last-child { border-radius: 0 4px 4px 0; }
+.mean { font: 600 14px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.bar-head { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 3.2rem; gap: 12px; font: 12px var(--mono); color: var(--ink-3); }
+@media (max-width: 600px) { .bar-head { display: none; } }
+.divider { height: 1px; background: var(--rule); margin: 4px 0; }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px/1.4 var(--mono);
+  padding: 6px 8px; border-radius: 6px; z-index: 5; max-width: 260px; }
+ul.take { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.group-head { font: 600 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.facts .fig h3 { margin-bottom: 6px; }
+a { color: var(--input); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="prose">
+    <div class="eyebrow">Simbrain tutorial · Competitive learning</div>
+    <h1>The Competitive Net Game</h1>
+    <p class="lede">Supplemental material for the <a href="https://simbrain.net">Simbrain</a> simulation <i>Simulations › Competitive › Competitive network (simple)</i>. The goal in that simulation is to train the network so that each of five input patterns gets its own winning output unit. This page shows what happens inside the network while you play. Everything here also applies to <i>Simulations › Competitive › Competitive network (shapes)</i>, which plays the same game with five pictures on a 10×10 grid of inputs.</p>
+  </header>
+
+  <section class="prose">
+    <h2>Background</h2>
+    <p>A competitive network learns to sort its inputs into groups without being told what the groups are. When an input is presented, the output units compete for it. The unit with the largest weighted input wins, and only the winner learns: its weights move toward the input, so it becomes even more likely to win that input again. Over training, each unit comes to stand for one group of similar inputs.</p>
+    <p>Because each unit’s weights are normalized to sum to 1, moving toward one pattern means moving away from the others. A unit trained fully onto one pattern lets go of the rest, and an unused unit can pick them up. A unit that keeps winning two patterns instead settles between them and holds on to both, and a unit that never wins never learns.</p>
+  </section>
+
+  <section class="prose">
+    <h2>The game</h2>
+    <p>The network has seven input nodes and five output units. Each pattern turns on three of the seven input nodes (filled circles), and any two patterns share exactly one active node.</p>
+    <div class="strip" aria-label="The five input patterns">
+      <div id="strip"></div>
+    </div>
+    <p>Each output unit has seven fan-in weights, so its weight vector is a point in the same 7-dimensional space as the inputs. The weights start random and are scaled to sum to 1. When a pattern is presented, the unit with the largest weighted input wins. Only the winner learns: its weights move a fraction of the way (the learning rate, 0.1 here) toward the input, scaled to sum to 1 as well.</p>
+  </section>
+
+  <section>
+    <div class="prose">
+      <h2>Play it in input space</h2>
+      <p>Blue points are the five patterns, red points are the five units’ weight vectors, and dashed lines join each pattern to the unit that currently wins it. Click a pattern to train on it once, like selecting a pattern in Simbrain and pressing <code>Train</code>. Hold the button down to keep training, or press <code>Train ×10</code> to train the last pattern ten more times. You win when five different units are winning, one for each pattern.</p>
+    </div>
+    <div class="bench">
+      <div class="controls">
+        <div class="group"><span class="group-label">Train</span>
+          <button class="pat" data-p="0">P1</button><button class="pat" data-p="1">P2</button><button class="pat" data-p="2">P3</button><button class="pat" data-p="3">P4</button><button class="pat" data-p="4">P5</button>
+          <button id="x10" title="Train the last pattern ten more times" disabled>Train ×10</button>
+        </div>
+        <div class="group">
+          <button id="reset">New game</button>
+          <button id="lucky">Deal a lucky start</button>
+        </div>
+        <span class="meta" id="meta"></span>
+      </div>
+      <div class="bench-grid">
+        <div>
+          <canvas id="cv" aria-label="Input space projection showing patterns and weight vectors"></canvas>
+          <p class="caption" id="proj-cap"></p>
+        </div>
+        <div class="side">
+          <div class="meter-wrap" id="meter-wrap">
+            <div class="meter-head"><span>Different winning units</span><b id="score">3 / 5</b></div>
+            <div class="meter" id="meter" role="meter" aria-valuemin="0" aria-valuemax="5" aria-label="Different winning units"></div>
+            <div class="banner" id="banner" hidden></div>
+          </div>
+          <details class="more">
+            <summary>Details: weighted inputs</summary>
+            <p class="caption">This is not a weight matrix. Each row is one pattern, and each number is one unit’s whole weighted input when that pattern is presented. The biggest number in a row wins, shown in red. Several reds in one column mean that one output unit wins several patterns, so those patterns share it. The goal is one red in every column.</p>
+            <div style="overflow-x:auto"><table class="resp" id="resp"></table></div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2>How to play</h2>
+    <p><b>What doesn’t work.</b> The obvious strategy is to take turns: P1, P2, P3, P4, P5, then around again. This rarely wins, about one start in eight. Each step moves the winner only a tenth of the way, so a unit that wins two patterns is pulled back and forth and settles halfway between them, where it keeps winning both. Taking turns keeps that tug of war going forever.</p>
+    <p><b>What works.</b> Commit to one pattern at a time. Train it many times in a row (press it, then <code>Train ×10</code> twice) before moving on. Its unit moves all the way onto that pattern and lets go of the others, and the next pattern you train is then free to land on another unit. This wins about nine times in ten. If two patterns still share a unit at the end, train one of them more until the other moves to a new unit. In the grid simulation, taking turns wins about one time in seven and committing almost always wins.</p>
+    <p><b>Settings that reveal the dynamics.</b> These are not on this page, but in Simbrain you can change them by right-clicking the competitive network and choosing <code>Edit</code>.</p>
+    <ul class="take">
+      <li><code>Normalize inputs</code> off. Now the winner’s weights grow toward 1 on every active input instead of sharing a fixed total, so nothing lets go. The first unit you train responds strongly to every pattern that shares an input with its own, far more than any untrained unit, and it takes every pattern. The game can no longer be won. This shows why normalization matters.</li>
+      <li><code>Learning rate</code>. At 0.5 each step jumps most of the way to the input, so the tug of war is short and even taking turns often wins. At 0.05 everything slows down and committing takes twice as many steps.</li>
+      <li><code>Use Leaky learning</code>. Losing units also drift slowly toward each input, which brings dead units into play and helps a little.</li>
+    </ul>
+  </section>
+
+  <section class="prose">
+    <h2>Discussion</h2>
+    <ul class="take">
+      <li>Competitive learning is greedy. Whoever wins a pattern first moves toward it and becomes even more likely to win it again, so the random starting weights matter.</li>
+      <li>A unit that wins nothing never learns. Such dead units are the classic failure of competitive learning. Committing other units to their own patterns is what gives dead units a chance.</li>
+      <li>How similar the inputs are decides whether training order can fix a bad start. These patterns overlap a little, so it can. When patterns overlap a lot, it often cannot, and the network lumps similar patterns together.</li>
+      <li>Normalization keeps every unit’s weights summing to 1. Without it, a trained unit’s weights keep growing and it ends up winning everything.</li>
+    </ul>
+  </section>
+
+</div>
+<script>
+(() => {
+  const FANO = [[0,1,3],[1,2,4],[2,3,5],[3,4,6],[4,5,0]].map(t => [0,1,2,3,4,5,6].map(j => t.includes(j) ? 1 : 0));
+  const P = FANO, LR = 0.1;
+  const X = FANO.map(p => p.map(v => v / 3)), M = [0,1,2,3,4,5,6].map(j => X.reduce((s, x) => s + x[j], 0) / 5);
+  const axis = f => { const a = [0,1,2,3,4,5,6].map(j => X.reduce((s, x, i) => s + f(Math.PI / 2 + 2 * Math.PI * i / 5) * (x[j] - M[j]), 0));
+    const n = Math.hypot(...a); return a.map(v => v / n); };
+  const A1 = axis(Math.cos), A2 = axis(Math.sin), [X0, X1, Y0, Y1] = [-0.45, 0.45, -0.36, 0.42];
+  const UNITS = ["O1", "O2", "O3", "O4", "O5"];
+
+  const strip = document.getElementById("strip");
+  FANO.forEach((row, i) => {
+    const r = document.createElement("div"); r.className = "strip-row";
+    r.innerHTML = `<span>Pattern ${i + 1} (P${i + 1})</span>` + row.map(v => `<div class="cell${v ? " on" : ""}"></div>`).join("");
+    strip.appendChild(r);
+  });
+  document.getElementById("proj-cap").textContent = "A 2D view chosen so the five patterns form a regular pentagon. In 7D every pair of patterns is the same distance apart. Winners are computed in the full 7D space with the sim’s own rule, so a dashed line can point to a red dot that looks farther away than another.";
+
+  let seed = 7;
+  const rand = () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  let W, trails, steps, lastP = -1, note = "", prevN = 0, won = false;
+  const dot = (w, x) => w.reduce((s, v, i) => s + v * x[i], 0);
+  const proj = w => [dot(w.map((v, i) => v - M[i]), A1), dot(w.map((v, i) => v - M[i]), A2)];
+  const randomW = () => UNITS.map(() => { const u = Array.from({ length: 7 }, rand); const s = u.reduce((a, b) => a + b); return u.map(v => v / s); });
+  const winners = w => P.map(p => { let b = 0; w.forEach((u, k) => { if (dot(u, p) > dot(w[b], p)) b = k; }); return b; });
+  const distinct = w => new Set(winners(w)).size;
+  let best = null; try { best = +localStorage.getItem("compgame-best") || null; } catch (e) {}
+
+  let run = null;
+  function start(w, msg) { clearInterval(run); run = null; W = w; trails = W.map(u => [proj(u)]); steps = 0; lastP = -1; note = msg || ""; won = false; prevN = distinct(W); render(); }
+  function train(p) {
+    const w = winners(W)[p];
+    W[w] = W[w].map((v, i) => v + LR * (X[p][i] - v));
+    trails[w].push(proj(W[w])); if (trails[w].length > 400) trails[w].shift();
+    steps++; lastP = p; note = ""; render();
+  }
+
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  function draw() {
+    const cw = cv.clientWidth, ch = Math.round(cw * (Y1 - Y0) / (X1 - X0)), dpr = window.devicePixelRatio || 1;
+    cv.style.height = ch + "px"; cv.width = cw * dpr; cv.height = ch * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const sx = x => (x - X0) / (X1 - X0) * cw, sy = y => (Y1 - y) / (Y1 - Y0) * ch;
+    const ink = css("--ink"), ink3 = css("--ink-3"), rule = css("--rule"), blue = css("--input"), red = css("--weight"), bg = css("--bg");
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.strokeStyle = rule; ctx.lineWidth = 1;
+    for (let g = Math.ceil(X0 * 10) / 10; g <= X1; g += 0.1) { ctx.beginPath(); ctx.moveTo(sx(g), 0); ctx.lineTo(sx(g), ch); ctx.stroke(); }
+    for (let g = Math.ceil(Y0 * 10) / 10; g <= Y1; g += 0.1) { ctx.beginPath(); ctx.moveTo(0, sy(g)); ctx.lineTo(cw, sy(g)); ctx.stroke(); }
+    const pts = X.map(proj);
+    const win = winners(W);
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = ink3; ctx.lineWidth = 1.5;
+    pts.forEach((q, i) => { const u = proj(W[win[i]]); ctx.beginPath(); ctx.moveTo(sx(q[0]), sy(q[1])); ctx.lineTo(sx(u[0]), sy(u[1])); ctx.stroke(); });
+    ctx.setLineDash([]);
+    trails.forEach(tr => { if (tr.length < 2) return; ctx.strokeStyle = red; ctx.globalAlpha = 0.45; ctx.lineWidth = 2; ctx.beginPath();
+      tr.forEach((q, i) => i ? ctx.lineTo(sx(q[0]), sy(q[1])) : ctx.moveTo(sx(q[0]), sy(q[1]))); ctx.stroke(); ctx.globalAlpha = 1; });
+    const font = Math.max(11, Math.min(13, cw / 45));
+    pts.forEach((q, i) => {
+      const x = sx(q[0]), y = sy(q[1]);
+      ctx.fillStyle = blue; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = ink; ctx.font = `600 ${font}px "IBM Plex Mono", monospace`; ctx.textAlign = "center";
+      const len = Math.hypot(q[0], q[1]) || 1;
+      ctx.textBaseline = "middle"; ctx.fillText(`P${i + 1}`, x + q[0] / len * 26, y - q[1] / len * 26); ctx.textBaseline = "alphabetic";
+    });
+    W.forEach((u, k) => {
+      const q = proj(u), x = sx(q[0]), y = sy(q[1]);
+      ctx.fillStyle = red; ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 10, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 10px "Libre Franklin", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(UNITS[k], x, y + 0.5); ctx.textBaseline = "alphabetic";
+    });
+  }
+
+  const meter = document.getElementById("meter"), banner = document.getElementById("banner"), wrap = document.getElementById("meter-wrap");
+  meter.innerHTML = UNITS.map(() => `<i></i>`).join("");
+  const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+
+  function confetti() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const colors = [css("--input"), css("--weight"), css("--good"), css("--warn")];
+    for (let i = 0; i < 40; i++) {
+      const c = document.createElement("span"); c.className = "confetti";
+      const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 110;
+      c.style.cssText = `background:${colors[i % 4]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d - 40}px;--r:${Math.random() * 720 - 360}deg;animation-delay:${Math.random() * 80}ms`;
+      wrap.appendChild(c); setTimeout(() => c.remove(), 1300);
+    }
+  }
+
+  function render() {
+    const win = winners(W), n = new Set(win).size;
+    const counts = {}; win.forEach(w => counts[w] = (counts[w] || 0) + 1);
+    document.getElementById("score").textContent = `${n} / 5`;
+    meter.setAttribute("aria-valuenow", n);
+    [...meter.children].forEach((s, i) => { const on = i < n; if (on && !s.classList.contains("on") && n > prevN) replay(s, "pop"); s.classList.toggle("on", on); });
+    if (n < prevN) replay(meter, "shake");
+    wrap.classList.toggle("full", n === 5);
+    if (n === 5 && steps > 0 && !won) {
+      won = true;
+      const isBest = best === null || steps < best;
+      if (isBest) { best = steps; try { localStorage.setItem("compgame-best", steps); } catch (e) {} }
+      banner.innerHTML = `<b>Winner!</b> Every pattern has its own unit, in ${steps} training steps.${isBest ? " New best." : ` Your best is ${best}.`}`;
+      banner.hidden = false; replay(banner, "pop"); confetti();
+    } else if (n === 5 && steps === 0) {
+      banner.innerHTML = `Solved by luck, with no training. Press <b>New game</b> to play.`; banner.hidden = false;
+    } else if (n < 5) { won = false; banner.hidden = true; }
+    prevN = n;
+
+    let h = `<tr><th></th>${UNITS.map(u => `<th class="u">${u}</th>`).join("")}<th></th></tr>`;
+    P.forEach((p, i) => {
+      h += `<tr><th>P${i + 1}</th>` + W.map((u, k) => {
+        const v = dot(u, p);
+        return `<td class="${win[i] === k ? "win" : ""}">${v.toFixed(2)}</td>`;
+      }).join("") + `<td class="lbl ${counts[win[i]] > 1 ? "shared" : "own"}">${counts[win[i]] > 1 ? "shared" : "own unit"}</td></tr>`;
+    });
+    document.getElementById("resp").innerHTML = h;
+    document.querySelectorAll("#cv-bench button.pat").forEach(b => b.classList.toggle("last", +b.dataset.p === lastP));
+    document.getElementById("x10").disabled = lastP < 0 || run !== null;
+    document.getElementById("meta").textContent = `${steps} training steps${note ? " · " + note : ""}`;
+    draw();
+  }
+
+  const bench = cv.closest(".bench"); bench.id = "cv-bench";
+  bench.querySelectorAll("button.pat").forEach(b => {
+    const p = +b.dataset.p; let hold = null;
+    const stop = () => { clearTimeout(hold); clearInterval(hold); hold = null; };
+    b.addEventListener("pointerdown", e => { if (e.button !== 0) return; stop(); train(p); hold = setTimeout(() => { hold = setInterval(() => train(p), 70); }, 350); });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(t => b.addEventListener(t, stop));
+    b.addEventListener("click", e => { if (e.detail === 0) train(p); });
+  });
+  document.getElementById("x10").onclick = () => {
+    if (lastP < 0 || run) return;
+    const p = lastP; let k = 0;
+    run = setInterval(() => { if (++k === 10) { clearInterval(run); run = null; } train(p); }, 60);
+    render();
+  };
+  const newGame = () => { let w; do { w = randomW(); } while (distinct(w) > 3); start(w); };
+  document.getElementById("reset").onclick = newGame;
+  document.getElementById("lucky").onclick = () => { let d = 0, w; do { w = randomW(); d++; } while (distinct(w) < 5); start(w, `took ${d} deals`); };
+  newGame();
+  new ResizeObserver(draw).observe(cv);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+</body>
+</html>
