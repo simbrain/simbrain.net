@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data cleaning homework</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.5; margin: 0; padding: 2rem 1rem; }
+    main { margin: 0 auto; max-width: 42rem; }
+    h1 { font-size: 1.5rem; }
+    label { display: block; margin-bottom: .4rem; }
+    .input-row { display: flex; }
+    .input-row input { border: 1px solid #767676; border-radius: .25rem 0 0 .25rem; flex: 1; font: inherit; min-width: 0; padding: .5rem .7rem; }
+    button { background: #0d6efd; border: 1px solid #0d6efd; border-radius: 0 .25rem .25rem 0; color: white; cursor: pointer; font: inherit; padding: .5rem .8rem; }
+    #download { border-radius: .25rem; margin: 1rem 0; }
+    .error { color: #b02a37; margin-top: .35rem; }
+    table { border-collapse: collapse; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .9rem; }
+    th, td { border: 1px solid #ccc; padding: .15rem .5rem; text-align: left; }
+    details { margin: .5rem 0; }
+    summary { cursor: pointer; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .9rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Data cleaning homework</h1>
+
+  <form id="student-id-form" novalidate>
+    <label for="student-id">Student id</label>
+    <div class="input-row">
+      <input id="student-id" name="student-id" type="text" inputmode="numeric" autocomplete="off" required>
+      <button type="submit">Generate</button>
+    </div>
+    <div class="error hidden" id="student-id-error">Please enter a student ID.</div>
+  </form>
+
+  <section id="result" class="hidden" aria-live="polite">
+    <details>
+      <summary>Instructions</summary>
+      <ol>
+        <li><strong>Data cleaning.</strong> Remove any row with a bad value: text where a number should be (like NA, ?, or a number written in words), a weight or diameter that is zero or negative, a number off by orders of magnitude (like 99999 g), or a misspelled color.</li>
+        <li><strong>Imputation.</strong> Fill each blank cell with the average of its column, after removing bad rows.</li>
+        <li><strong>Rescaling.</strong> Rescale any numeric column with values above 1 by dividing by its maximum.</li>
+        <li><strong>Feature engineering.</strong> Replace each column of categories (text values) with one-hot columns.</li>
+        <li>Make two new tabs, named “inputs” and “targets”. Copy the input features into “inputs” and the one-hot fruit columns into “targets”.</li>
+        <li>Train a classifier in Simbrain to predict the fruit.</li>
+      </ol>
+    </details>
+    <details>
+      <summary>Spreadsheet formulas</summary>
+      <p>These assume the data runs from row 2 to row 32, with the column names in row 1. Adjust the letters and row numbers to match your sheet.</p>
+      <p><strong>Impute a cell.</strong> To fill a blank, for example C12, with the average of the cells above and below it, type <code>=AVERAGE(C2:C11, C13:C32)</code>.</p>
+      <p><strong>Rescale.</strong> In an empty column, type <code>=A2/MAX(A:A)</code> and fill down.</p>
+      <p><strong>One-hot.</strong> Type the category names (apple, orange, lemon) as column names in row 1 of three empty columns, for example G, H, I. In G2 type <code>=IF($E2=G$1,1,0)</code> and fill down and across. Do the same for color with red, green, yellow, orange.</p>
+    </details>
+    <button id="download" type="button">Download CSV</button>
+    <table id="table"></table>
+  </section>
+</main>
+
+<script src="dataset.js"></script>
+<script>
+  (() => {
+    const form = document.getElementById('student-id-form');
+    const input = document.getElementById('student-id');
+    const error = document.getElementById('student-id-error');
+    const result = document.getElementById('result');
+    const table = document.getElementById('table');
+    let current = null;
+
+    function renderTable(dataset) {
+      table.replaceChildren();
+      const head = table.createTHead().insertRow();
+      dataset.header.forEach((name) => {
+        const th = document.createElement('th');
+        th.textContent = name;
+        head.appendChild(th);
+      });
+      const body = table.createTBody();
+      dataset.rows.forEach((row) => {
+        const tr = body.insertRow();
+        row.forEach((cell) => { tr.insertCell().textContent = cell; });
+      });
+    }
+
+    function generate(studentId) {
+      const dataset = FruitDataset.generateDataset(studentId);
+      current = { studentId, csv: FruitDataset.toCsv(dataset) };
+      renderTable(dataset);
+      result.classList.remove('hidden');
+    }
+
+    document.getElementById('download').addEventListener('click', () => {
+      if (!current) return;
+      const blob = new Blob([current.csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      const safeId = current.studentId.replace(/[^A-Za-z0-9_-]/g, '_');
+      link.download = `fruit_${safeId}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const studentId = input.value.trim();
+      const isValid = studentId.length > 0;
+      error.classList.toggle('hidden', isValid);
+      if (isValid) generate(studentId);
+    });
+  })();
+</script>
+</body>
+</html>

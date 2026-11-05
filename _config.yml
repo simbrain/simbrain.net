@@ -46,3 +46,4 @@ exclude:
   - README.md
   - misc/README.md
   - misc/*/README.md
+  - misc/data_cleaning/answer_key.js
