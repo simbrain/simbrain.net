@@ -83,8 +83,10 @@ function handle(req) {
       const src = req.entry || {};
       const track = String(src.track || '');
       if (!tracksFor(key).some((t) => t.track === track)) throw new Error('Start this trail first.');
+      // The app sends its own id, so a retried save isn't stored twice.
+      const id = /^[a-z0-9]{6,24}$/.test(String(src.id || '')) ? String(src.id) : Utilities.getUuid().slice(0, 8);
       const entry = {
-        id: Utilities.getUuid().slice(0, 8),
+        id,
         timestamp: new Date(),
         key,
         nickname: user.nickname,
@@ -92,8 +94,12 @@ function handle(req) {
       };
       for (const f of ENTRY_TEXT) entry[f] = String(src[f] || '').slice(0, MAX_TEXT);
       if (!entry.kind || !entry.description || !entry.words) throw new Error('Please fill in the required fields.');
-      withLock(() => append('Entries', entry));
-      return { entry: publicEntry(entry) };
+      return withLock(() => {
+        const existing = rows('Entries').find((e) => e.id === id && e.key === key);
+        if (existing) return { entry: publicEntry(existing) };
+        append('Entries', entry);
+        return { entry: publicEntry(entry) };
+      });
     }
 
     default:
