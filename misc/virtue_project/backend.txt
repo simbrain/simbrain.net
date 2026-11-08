@@ -1,0 +1,170 @@
+/**
+ * Virtue Trails backend: an Apps Script web app that stores everything in the
+ * Google Sheet it is attached to. See README.md for setup.
+ *
+ * The app sends POST requests with a JSON body {action, nickname, ...}:
+ *   register   {nickname}                 -> {nickname, tracks, entries}
+ *   login      {nickname}                 -> {nickname, tracks, entries}
+ *   startTrack {nickname, track}          -> {tracks}
+ *   addEntry   {nickname, entry}          -> {entry}
+ * Errors come back as {error: "message"}.
+ */
+
+const SHEETS = {
+  Users: ['nickname', 'key', 'created'],
+  Tracks: ['key', 'nickname', 'track', 'started'],
+  Entries: ['id', 'timestamp', 'key', 'nickname', 'track', 'kind', 'assignment',
+            'description', 'words', 'designNote'],
+};
+
+const ENTRY_TEXT = ['kind', 'assignment', 'description', 'words', 'designNote'];
+const MAX_TEXT = 2000;
+
+/** Run once from the editor to create the tabs and header rows. */
+function setup() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  for (const [name, headers] of Object.entries(SHEETS)) {
+    const sh = ss.getSheetByName(name) || ss.insertSheet(name);
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(headers);
+      sh.setFrozenRows(1);
+    }
+  }
+}
+
+function doGet() {
+  return json({ ok: true, app: 'virtue trails' });
+}
+
+function doPost(e) {
+  try {
+    const req = JSON.parse(e.postData.contents);
+    return json(handle(req));
+  } catch (err) {
+    return json({ error: err.message || String(err) });
+  }
+}
+
+function handle(req) {
+  const nickname = String(req.nickname || '').trim().replace(/\s+/g, ' ');
+  if (!nickname) throw new Error('Please enter a nickname.');
+  if (nickname.length > 40) throw new Error('Please use a shorter nickname.');
+  const key = nickname.toLowerCase();
+
+  switch (req.action) {
+    case 'register':
+      return withLock(() => {
+        if (findUser(key)) {
+          throw new Error(`"${nickname}" is already taken. If it's yours, use Log back in. Otherwise pick another.`);
+        }
+        append('Users', { nickname, key, created: new Date() });
+        return { nickname, tracks: [], entries: [] };
+      });
+
+    case 'login': {
+      const user = requireUser(key);
+      return { nickname: user.nickname, tracks: tracksFor(key), entries: entriesFor(key) };
+    }
+
+    case 'startTrack': {
+      const user = requireUser(key);
+      const track = String(req.track || '');
+      if (!/^[a-z_]{1,30}$/.test(track)) throw new Error('Unknown track.');
+      return withLock(() => {
+        if (!tracksFor(key).some((t) => t.track === track)) {
+          append('Tracks', { key, nickname: user.nickname, track, started: new Date() });
+        }
+        return { tracks: tracksFor(key) };
+      });
+    }
+
+    case 'addEntry': {
+      const user = requireUser(key);
+      const src = req.entry || {};
+      const track = String(src.track || '');
+      if (!tracksFor(key).some((t) => t.track === track)) throw new Error('Start this trail first.');
+      const entry = {
+        id: Utilities.getUuid().slice(0, 8),
+        timestamp: new Date(),
+        key,
+        nickname: user.nickname,
+        track,
+      };
+      for (const f of ENTRY_TEXT) entry[f] = String(src[f] || '').slice(0, MAX_TEXT);
+      if (!entry.kind || !entry.description || !entry.words) throw new Error('Please fill in the required fields.');
+      withLock(() => append('Entries', entry));
+      return { entry: publicEntry(entry) };
+    }
+
+    default:
+      throw new Error('Unknown action.');
+  }
+}
+
+// ---------- sheet helpers ----------
+
+function sheet(name) {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
+  if (!sh) throw new Error(`Missing tab "${name}". Run setup() first.`);
+  return sh;
+}
+
+function rows(name) {
+  const values = sheet(name).getDataRange().getValues();
+  const headers = values.shift() || [];
+  return values.map((r) => {
+    const o = {};
+    headers.forEach((h, i) => {
+      const v = r[i];
+      o[h] = v instanceof Date ? v.toISOString() : String(v);
+    });
+    return o;
+  });
+}
+
+// A leading apostrophe stores text literally, so input like "=SUM(...)" or
+// "007" is never turned into a formula or a number.
+function append(name, obj) {
+  sheet(name).appendRow(SHEETS[name].map((h) => {
+    const v = obj[h];
+    return v instanceof Date ? v : "'" + String(v == null ? '' : v);
+  }));
+}
+
+function findUser(key) {
+  return rows('Users').find((u) => u.key === key);
+}
+
+function requireUser(key) {
+  const u = findUser(key);
+  if (!u) throw new Error("We don't have that nickname. Check the spelling, or use I'm new.");
+  return u;
+}
+
+function tracksFor(key) {
+  return rows('Tracks').filter((t) => t.key === key).map((t) => ({ track: t.track, started: t.started }));
+}
+
+function entriesFor(key) {
+  return rows('Entries').filter((e) => e.key === key).map(publicEntry);
+}
+
+function publicEntry(e) {
+  const out = { id: e.id, timestamp: e.timestamp instanceof Date ? e.timestamp.toISOString() : e.timestamp, track: e.track };
+  for (const f of ENTRY_TEXT) out[f] = e[f];
+  return out;
+}
+
+function withLock(fn) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    return fn();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function json(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
