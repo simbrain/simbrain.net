@@ -45,6 +45,10 @@ Running notes on choices made during the pilot, newest last.
 
 After editing the script later, use **Deploy → Manage deployments → Edit → New version** so the same URL serves the new code.
 
+## Deploying changes
+
+GitHub's CDN can keep serving old copies of the CSS and JS files for hours after a push. So the links in `index.html` carry a version (`app.js?v=2`). Bump the number on every link whenever any of those files change, so browsers fetch the new ones.
+
 ## Local testing
 
 With `API_URL` empty, or with `?local=1` added to the URL, the app runs `backend.txt` in the browser against a fake sheet kept in localStorage. From the repo root:
