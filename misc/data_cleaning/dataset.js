@@ -1,6 +1,6 @@
 // Generates a student's raw fruit dataset from their student id. Each student
 // gets the same base data, shuffled, lightly jittered, and corrupted in a
-// deterministic way. Used by index.html and by answer_key.js.
+// deterministic way. Used by index.html.
 (function (root) {
   const HEADER = ['Weight (g)', 'Diameter (cm)', 'Sweetness (0-1)', 'Color', 'Fruit'];
   const COLORS = ['red', 'green', 'yellow', 'orange'];
