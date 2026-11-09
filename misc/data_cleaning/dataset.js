@@ -2,48 +2,47 @@
 // gets the same base data, shuffled, lightly jittered, and corrupted in a
 // deterministic way. Used by index.html.
 (function (root) {
-  const HEADER = ['Weight (g)', 'Diameter (cm)', 'Sweetness (0-1)', 'Color', 'Fruit'];
-  const COLORS = ['red', 'green', 'yellow', 'orange'];
+  const HEADER = ['Weight (g)', 'Diameter (cm)', 'Sweetness (0-1)', 'Fruit'];
   const FRUITS = ['apple', 'orange', 'lemon'];
 
-  // weight, diameter, sweetness, color, fruit
+  // weight, diameter, sweetness, fruit
   const BASE = [
-    [182, 8.1, 0.8, 'red', 'apple'],
-    [205, 8.6, 0.7, 'red', 'apple'],
-    [164, 7.6, 0.9, 'red', 'apple'],
-    [231, 9.0, 0.8, 'red', 'apple'],
-    [176, 7.9, 0.6, 'green', 'apple'],
-    [198, 8.3, 0.7, 'green', 'apple'],
-    [153, 7.3, 0.6, 'green', 'apple'],
-    [214, 8.7, 0.8, 'yellow', 'apple'],
-    [189, 8.2, 0.9, 'yellow', 'apple'],
-    [171, 7.8, 0.7, 'red', 'apple'],
-    [226, 8.9, 0.8, 'green', 'apple'],
-    [160, 7.5, 0.9, 'red', 'apple'],
-    [196, 8.4, 0.6, 'orange', 'orange'],
-    [221, 9.2, 0.7, 'orange', 'orange'],
-    [178, 7.9, 0.5, 'orange', 'orange'],
-    [243, 9.6, 0.6, 'orange', 'orange'],
-    [204, 8.7, 0.7, 'orange', 'orange'],
-    [167, 7.6, 0.6, 'orange', 'orange'],
-    [232, 9.4, 0.8, 'orange', 'orange'],
-    [189, 8.2, 0.5, 'orange', 'orange'],
-    [210, 8.9, 0.7, 'orange', 'orange'],
-    [157, 7.4, 0.6, 'orange', 'orange'],
-    [248, 9.8, 0.7, 'orange', 'orange'],
-    [185, 8.1, 0.6, 'orange', 'orange'],
-    [84, 5.6, 0.2, 'yellow', 'lemon'],
-    [102, 6.1, 0.1, 'yellow', 'lemon'],
-    [71, 5.2, 0.2, 'yellow', 'lemon'],
-    [95, 5.9, 0.3, 'yellow', 'lemon'],
-    [110, 6.4, 0.2, 'yellow', 'lemon'],
-    [78, 5.4, 0.1, 'green', 'lemon'],
-    [89, 5.7, 0.2, 'yellow', 'lemon'],
-    [118, 6.6, 0.3, 'yellow', 'lemon'],
-    [66, 5.0, 0.1, 'yellow', 'lemon'],
-    [99, 6.0, 0.2, 'green', 'lemon'],
-    [92, 5.8, 0.1, 'yellow', 'lemon'],
-    [75, 5.3, 0.2, 'yellow', 'lemon']
+    [182, 8.1, 0.8, 'apple'],
+    [205, 8.6, 0.7, 'apple'],
+    [164, 7.6, 0.9, 'apple'],
+    [231, 9.0, 0.8, 'apple'],
+    [176, 7.9, 0.7, 'apple'],
+    [198, 8.3, 0.7, 'apple'],
+    [153, 7.3, 0.7, 'apple'],
+    [214, 8.7, 0.8, 'apple'],
+    [189, 8.2, 0.9, 'apple'],
+    [171, 7.8, 0.7, 'apple'],
+    [226, 8.9, 0.8, 'apple'],
+    [160, 7.5, 0.9, 'apple'],
+    [196, 8.4, 0.4, 'orange'],
+    [221, 9.2, 0.5, 'orange'],
+    [178, 7.9, 0.3, 'orange'],
+    [243, 9.6, 0.4, 'orange'],
+    [204, 8.7, 0.5, 'orange'],
+    [167, 7.6, 0.4, 'orange'],
+    [232, 9.4, 0.6, 'orange'],
+    [189, 8.2, 0.3, 'orange'],
+    [210, 8.9, 0.5, 'orange'],
+    [157, 7.4, 0.4, 'orange'],
+    [248, 9.8, 0.5, 'orange'],
+    [185, 8.1, 0.4, 'orange'],
+    [84, 5.6, 0.2, 'lemon'],
+    [102, 6.1, 0.1, 'lemon'],
+    [71, 5.2, 0.2, 'lemon'],
+    [95, 5.9, 0.3, 'lemon'],
+    [110, 6.4, 0.2, 'lemon'],
+    [78, 5.4, 0.1, 'lemon'],
+    [89, 5.7, 0.2, 'lemon'],
+    [118, 6.6, 0.3, 'lemon'],
+    [66, 5.0, 0.1, 'lemon'],
+    [99, 6.0, 0.2, 'lemon'],
+    [92, 5.8, 0.1, 'lemon'],
+    [75, 5.3, 0.2, 'lemon']
   ];
 
   // Same hash and generator as the logic gate homework.
@@ -102,43 +101,59 @@
     return parts.join(' ');
   }
 
-  const MISSPELLED = { red: 'rde', green: 'gren', yellow: 'yelow', orange: 'ornage' };
+  // Rows to remove (bad fruit label) and number cells to impute (one per numeric column).
+  const NUM_BAD_ROWS = 2;
+  const NUM_IMPUTED = 3;
 
-  // Each corruption changes one cell of a row (an array of strings).
-  // Indices: 0 weight, 1 diameter, 2 sweetness, 3 color, 4 fruit.
-  const CORRUPTIONS = {
-    blank: (random, row) => { row[randInt(random, 0, 2)] = ''; },
-    na: (random, row) => { row[randInt(random, 0, 2)] = 'NA'; },
-    question: (random, row) => { row[randInt(random, 0, 2)] = '?'; },
-    negative: (random, row) => { row[0] = `-${row[0]}`; },
-    zero: (random, row) => { row[choose(random, [0, 1])] = '0'; },
-    absurd: (random, row) => {
-      if (random() < 0.5) row[0] = '99999';
-      else row[1] = String(Math.round(Number(row[1]) * 100));
-    },
-    words: (random, row) => { row[0] = numberToWords(Number(row[0])); },
-    misspelled: (random, row) => { row[3] = MISSPELLED[row[3]]; }
-  };
+  // Obviously broken text, the kind left by a bad export or a sensor glitch.
+  const GARBAGE = ['#####', '%$#@!', 'xqzvk', 'Ã¤Ã¶Ã', '0x3F2A', '???', 'null', '-1'];
+
+  // Corruptions that make a row unusable. Index 3 is the fruit.
+  const ROW_CORRUPTIONS = [
+    (random, row) => { row[3] = ''; },
+    (random, row) => { row[3] = choose(random, GARBAGE); }
+  ];
+
+  // Corruptions of a single number, to be imputed. Each lists the columns it
+  // applies to (0 weight, 1 diameter, 2 sweetness) and returns the new cell.
+  const CELL_CORRUPTIONS = [
+    { columns: [0, 1, 2], apply: () => '' },
+    { columns: [0, 1, 2], apply: () => 'NA' },
+    { columns: [0, 1, 2], apply: () => '?' },
+    { columns: [0, 1, 2], apply: (value) => `-${value}` },
+    { columns: [0, 1], apply: () => '0' },
+    { columns: [0], apply: () => '99999' },
+    { columns: [1, 2], apply: (value) => String(Math.round(Number(value) * 100)) },
+    { columns: [0], apply: (value) => numberToWords(Number(value)) }
+  ];
 
   function jitter(random, base) {
-    const [weight, diameter, sweetness, color, fruit] = base;
+    const [weight, diameter, sweetness, fruit] = base;
     const newWeight = weight + randInt(random, -6, 6);
     const newDiameter = Math.round((diameter + (random() - 0.5) * 0.4) * 10) / 10;
     let newSweetness = sweetness;
     if (random() < 0.2) newSweetness = Math.min(1, Math.max(0.1, sweetness + choose(random, [-0.1, 0.1])));
-    return [String(newWeight), newDiameter.toFixed(1), newSweetness.toFixed(1), color, fruit];
+    return [String(newWeight), newDiameter.toFixed(1), newSweetness.toFixed(1), fruit];
   }
 
   // Returns { header, rows } where rows are arrays of strings, in file order.
-  // Blank cells are to be imputed; every other corruption means the row is removed.
   function generateDataset(studentId) {
     const random = seededRandom(hashId(studentId));
     const rows = shuffle(random, BASE).map((base) => jitter(random, base));
     const rowOrder = shuffle(random, rows.map((_, i) => i));
-    const removals = shuffle(random, Object.keys(CORRUPTIONS).filter((t) => t !== 'blank'))
-      .slice(0, randInt(random, 4, 6));
-    const blanks = Array(randInt(random, 4, 5)).fill('blank');
-    removals.concat(blanks).forEach((type, i) => CORRUPTIONS[type](random, rows[rowOrder[i]]));
+
+    shuffle(random, ROW_CORRUPTIONS).slice(0, NUM_BAD_ROWS)
+      .forEach((corrupt, i) => corrupt(random, rows[rowOrder[i]]));
+
+    // Each imputed cell is in a different numeric column, with a different kind of problem.
+    const cellTypes = shuffle(random, CELL_CORRUPTIONS);
+    shuffle(random, [0, 1, 2]).slice(0, NUM_IMPUTED).forEach((column, i) => {
+      const typeIndex = cellTypes.findIndex((type) => type.columns.includes(column));
+      const [type] = cellTypes.splice(typeIndex, 1);
+      const row = rows[rowOrder[NUM_BAD_ROWS + i]];
+      row[column] = type.apply(row[column]);
+    });
+
     return { header: HEADER.slice(), rows };
   }
 
@@ -146,7 +161,7 @@
     return [dataset.header].concat(dataset.rows).map((row) => row.join(',')).join('\n') + '\n';
   }
 
-  const api = { generateDataset, toCsv, HEADER, COLORS, FRUITS };
+  const api = { generateDataset, toCsv, HEADER, FRUITS, NUM_BAD_ROWS, NUM_IMPUTED };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.FruitDataset = api;
 })(this);

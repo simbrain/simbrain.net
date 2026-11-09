@@ -39,8 +39,8 @@
     <details>
       <summary>Instructions</summary>
       <ol>
-        <li><strong>Data cleaning.</strong> Remove any row with a bad value: text where a number should be (like NA, ?, or a number written in words), a weight or diameter that is zero or negative, a number off by orders of magnitude (like 99999 g), or a misspelled color.</li>
-        <li><strong>Imputation.</strong> Fill each blank cell with the average of its column, after removing bad rows.</li>
+        <li><strong>Data cleaning.</strong> Remove the <span id="num-bad-rows"></span> rows with missing or garbled categorical data.</li>
+        <li><strong>Imputation.</strong> Replace the <span id="num-imputed"></span> missing or bad numbers with the average of the rest of their column. Bad numbers include text (like NA, ?, or a number written in words), a value that is zero or negative, and a number off by orders of magnitude (like 99999 g).</li>
         <li><strong>Rescaling.</strong> Rescale any numeric column with values above 1 by dividing by its maximum.</li>
         <li><strong>Feature engineering.</strong> Replace each column of categories (text values) with one-hot columns.</li>
         <li>Make two new tabs, named “inputs” and “targets”. Copy the input features into “inputs” and the one-hot fruit columns into “targets”.</li>
@@ -49,10 +49,10 @@
     </details>
     <details>
       <summary>Spreadsheet formulas</summary>
-      <p>These assume the data runs from row 2 to row 32, with the column names in row 1. Adjust the letters and row numbers to match your sheet.</p>
-      <p><strong>Impute a cell.</strong> To fill a blank, for example C12, with the average of the cells above and below it, type <code>=AVERAGE(C2:C11, C13:C32)</code>.</p>
+      <p>These assume the data runs from row 2 to row 35, with the column names in row 1. Adjust the letters and row numbers to match your sheet.</p>
+      <p><strong>Impute a cell.</strong> To fill a blank, for example C12, with the average of the cells above and below it, type <code>=AVERAGE(C2:C11, C13:C35)</code>.</p>
       <p><strong>Rescale.</strong> In an empty column, type <code>=A2/MAX(A:A)</code> and fill down.</p>
-      <p><strong>One-hot.</strong> Type the category names (apple, orange, lemon) as column names in row 1 of three empty columns, for example G, H, I. In G2 type <code>=IF($E2=G$1,1,0)</code> and fill down and across. Do the same for color with red, green, yellow, orange.</p>
+      <p><strong>One-hot.</strong> Type the category names (apple, orange, lemon) as column names in row 1 of three empty columns, for example G, H, I. In G2 type <code>=IF($D2=G$1,1,0)</code> and fill down and across. You can also type the 1s and 0s by hand.</p>
     </details>
     <button id="download" type="button">Download CSV</button>
     <table id="table"></table>
@@ -68,6 +68,8 @@
     const result = document.getElementById('result');
     const table = document.getElementById('table');
     let current = null;
+    document.getElementById('num-bad-rows').textContent = FruitDataset.NUM_BAD_ROWS;
+    document.getElementById('num-imputed').textContent = FruitDataset.NUM_IMPUTED;
 
     function renderTable(dataset) {
       table.replaceChildren();
