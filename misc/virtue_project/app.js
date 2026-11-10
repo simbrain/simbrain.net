@@ -592,7 +592,7 @@ function renderPicture(t, entries) {
     wrapWords(e.words).forEach((line, j) => label.append(svgEl('tspan', { x: p.x, dy: j === 0 ? 0 : 11 }, line)));
     g.append(label);
 
-    const showDetail = () => detail.replaceChildren(...entryDetail(t, e, `${th.unit[0].toUpperCase() + th.unit.slice(1)} ${i} · `));
+    const showDetail = () => detail.replaceChildren(el('div', {}, entryDetail(t, e, `${th.unit[0].toUpperCase() + th.unit.slice(1)} ${i} · `)));
     g.addEventListener('click', showDetail);
     g.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); showDetail(); }
