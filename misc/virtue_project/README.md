@@ -34,6 +34,7 @@ Running notes on choices made during the pilot, newest last.
 - **Themes.** Trail, Forest, Garden, and Night sky, chosen at the bottom of the page and remembered per device. Same data, different picture and vocabulary. This revises the earlier trail-only choice. The app was renamed from Virtue Trails to Virtue Project to fit.
 - **Home page.** No headings. Started tracks show progress and a Log button; the rest show a Start button.
 - **Weekly goal wording.** "1 this week (goal: 3 a week)". The goal is per week and unrelated to the month between sessions.
+- **Editing entries.** Each entry has an Edit link, in the Log and in the detail shown when tapping an entry in the picture. Edits change the text fields in place. The date stays, and no edit history is kept.
 
 ## Setting up the backend
 
@@ -47,7 +48,7 @@ After editing the script later, use **Deploy → Manage deployments → Edit →
 
 ## Deploying changes
 
-GitHub's CDN can keep serving old copies of the CSS and JS files for hours after a push. So the links in `index.html` carry a version (`app.js?v=2`). Bump the number on every link whenever any of those files change, so browsers fetch the new ones.
+GitHub's CDN can keep serving old copies of the CSS and JS files for hours after a push. So the links in `index.html` carry a version (`app.js?v=3`). Bump the number on every link whenever any of those files change, so browsers fetch the new ones.
 
 ## Local testing
 

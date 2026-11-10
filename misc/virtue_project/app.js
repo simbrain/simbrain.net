@@ -136,7 +136,7 @@ async function call(action, payload = {}) {
 }
 
 // ---------- background saving ----------
-// ops: [{ action: 'startTrack', track } | { action: 'addEntry', entry }]
+// ops: [{ action: 'startTrack', track } | { action: 'addEntry' | 'updateEntry', entry }]
 
 let ops = [];
 let flushing = false;
@@ -154,6 +154,10 @@ function loadPending() {
     }
     if (op.action === 'addEntry' && !session.entries.some((e) => e.id === op.entry.id)) {
       session.entries.push(op.entry);
+    }
+    if (op.action === 'updateEntry') {
+      const e = session.entries.find((x) => x.id === op.entry.id);
+      if (e) Object.assign(e, op.entry);
     }
   }
 }
@@ -185,9 +189,12 @@ async function flush() {
     try {
       if (op.action === 'startTrack') {
         await call('startTrack', { nickname: who.nickname, track: op.track });
-      } else {
+      } else if (op.action === 'addEntry') {
         const { entry } = await call('addEntry', { nickname: who.nickname, entry: op.entry });
-        Object.assign(op.entry, entry); // server's id and time
+        // server's id and time; not the text, which may have been edited since
+        Object.assign(op.entry, { id: entry.id, timestamp: entry.timestamp });
+      } else {
+        await call('updateEntry', { nickname: who.nickname, entry: op.entry });
       }
       ops.shift();
       savePending();
@@ -216,6 +223,7 @@ window.addEventListener('online', flush);
 
 // ---------- state and routing ----------
 // Pages: #/  (home)   #/trail/<id>   #/trail/<id>/entries   #/trail/<id>/new
+//        #/trail/<id>/edit/<entry id>
 
 let session = null; // { nickname, tracks, entries }
 let newestId = null; // entry just saved, for highlighting
@@ -234,10 +242,12 @@ function route() {
   prevHash = location.hash;
   renderHeader();
   if (!session) return renderWelcome();
-  const [page, id, sub] = location.hash.replace(/^#\/?/, '').split('/');
+  const [page, id, sub, entryId] = location.hash.replace(/^#\/?/, '').split('/');
   const t = page === 'trail' && trackById(id);
   if (t && session.tracks.some((x) => x.track === id)) {
     if (sub === 'new') { formFrom = from; return renderEntryForm(t); }
+    const editing = sub === 'edit' && session.entries.find((e) => e.id === entryId && e.track === id);
+    if (editing) { formFrom = from; return renderEntryForm(t, editing); }
     return renderTrack(t, sub === 'entries' ? 'log' : 'picture');
   }
   renderHome();
@@ -437,7 +447,8 @@ function renderTrack(t, view) {
 
 function entryDetail(t, e, prefix) {
   return [
-    el('div', { class: 'log-meta' }, `${prefix}${fmtDate(e.timestamp)} · ${kindOf(t, e.kind).label}`),
+    el('div', { class: 'log-meta' }, `${prefix}${fmtDate(e.timestamp)} · ${kindOf(t, e.kind).label} · `,
+      el('a', { href: `#/trail/${t.id}/edit/${e.id}` }, 'Edit')),
     e.assignment ? el('div', {}, el('em', {}, 'Assignment: '), e.assignment) : null,
     el('div', {}, e.description),
     el('div', { class: 'words' }, e.words),
@@ -451,16 +462,18 @@ function renderLog(t, entries) {
       el('li', { class: e.id === newestId ? 'new' : '' }, entryDetail(t, e, ''))));
 }
 
-function renderEntryForm(t) {
+// With an existing entry, the form edits it instead of adding a new one.
+function renderEntryForm(t, existing = null) {
   const th = theme();
   const err = el('p', { class: 'error', role: 'alert' });
+  const old = existing || {};
 
   const kindInputs = t.kinds.map((k, i) => el('label', { class: 'radio' },
-    el('input', { type: 'radio', name: 'kind', value: k.id, required: i === 0 }), ' ', k.label));
+    el('input', { type: 'radio', name: 'kind', value: k.id, required: i === 0, checked: old.kind === k.id }), ' ', k.label));
 
   const extra = t.extraField
     ? [el('label', { for: 'extra' }, t.extraField.label),
-       el('input', { id: 'extra', name: t.extraField.id, maxlength: 100, placeholder: t.extraField.placeholder || '' })]
+       el('input', { id: 'extra', name: t.extraField.id, maxlength: 100, placeholder: t.extraField.placeholder || '', value: old.assignment || '' })]
     : [];
 
   const form = el('form', { class: 'card', onsubmit: (ev) => {
@@ -468,48 +481,53 @@ function renderEntryForm(t) {
     const fd = new FormData(form);
     const get = (k) => (fd.get(k) || '').trim();
     if (!fd.get('kind')) { err.textContent = 'Please choose one of the options.'; return; }
-    const entry = {
-      id: newId(),
-      timestamp: new Date().toISOString(),
-      track: t.id,
+    const fields = {
       kind: get('kind'),
       assignment: t.extraField ? get(t.extraField.id) : '',
       description: get('description'),
       words: get('words'),
       designNote: get('designNote'),
     };
-    session.entries.push(entry);
-    newestId = entry.id;
-    enqueue({ action: 'addEntry', entry });
+    if (existing) {
+      Object.assign(existing, fields);
+      newestId = existing.id;
+      enqueue({ action: 'updateEntry', entry: { ...existing } });
+    } else {
+      const entry = { id: newId(), timestamp: new Date().toISOString(), track: t.id, ...fields };
+      session.entries.push(entry);
+      newestId = entry.id;
+      enqueue({ action: 'addEntry', entry });
+    }
     leaveForm(t, true);
   } },
-    el('h2', {}, `${t.mascot} New entry`),
+    el('h2', {}, `${t.mascot} ${existing ? `Edit entry from ${fmtDate(existing.timestamp)}` : 'New entry'}`),
     ...extra,
     el('fieldset', {}, el('legend', {}, t.kindLabel), kindInputs),
     el('label', { for: 'description' }, t.descLabel),
-    el('textarea', { id: 'description', name: 'description', rows: 4, required: true, maxlength: 2000 }),
+    el('textarea', { id: 'description', name: 'description', rows: 4, required: true, maxlength: 2000 }, old.description || ''),
     el('label', { for: 'words' }, 'Now sum it up in a handful of words'),
-    el('input', { id: 'words', name: 'words', required: true, maxlength: 60, placeholder: 'e.g. asked Holley, honors program' }),
+    el('input', { id: 'words', name: 'words', required: true, maxlength: 60, placeholder: 'e.g. asked Holley, honors program', value: old.words || '' }),
     el('p', { class: 'hint' }, `These words will appear with your ${th.unit}.`),
     el('div', { class: 'design-note' },
       el('label', { for: 'designNote' }, 'Thoughts on the design of the app (optional)'),
       el('p', { class: 'hint' }, "This is a pilot, and we'll keep improving it as we go. Anything confusing, missing, or that you'd like to see?"),
-      el('textarea', { id: 'designNote', name: 'designNote', rows: 2, maxlength: 2000 })),
+      el('textarea', { id: 'designNote', name: 'designNote', rows: 2, maxlength: 2000 }, old.designNote || '')),
     err,
     el('div', { class: 'row' },
       el('button', { type: 'submit', class: 'primary' }, 'Save'),
       el('button', { type: 'button', class: 'secondary', onclick: () => leaveForm(t) }, 'Cancel')),
   );
-  show(crumbs(['Home', '#/'], [t.name, `#/trail/${t.id}`], ['New entry']), form);
+  show(crumbs(['Home', '#/'], [t.name, `#/trail/${t.id}`], [existing ? 'Edit entry' : 'New entry']), form);
 }
 
 // Leave the form without leaving it in history, so Back never returns to it.
-// Cancel goes back to wherever the form was opened. Saving shows the picture:
+// Cancel goes back to wherever the form was opened. Saving shows the track:
 // by going back if the form was opened from this track, else by replacing.
 function leaveForm(t, saved = false) {
   const from = formFrom;
   formFrom = null;
-  const fromThisTrack = from && from.startsWith(`#/trail/${t.id}`) && !from.endsWith('/new');
+  const base = `#/trail/${t.id}`;
+  const fromThisTrack = from === base || from === `${base}/entries`;
   if (from && (fromThisTrack || !saved)) history.back();
   else go(`trail/${t.id}`, true);
 }
@@ -583,7 +601,7 @@ function renderPicture(t, entries) {
   }
 
   const here = pts[n];
-  svg.append(svgEl('text', { x: here.x + 16, y: here.y - 8, class: 'mascot' + (newestId ? ' arrive' : '') }, t.mascot));
+  svg.append(svgEl('text', { x: here.x + 16, y: here.y - 8, class: 'mascot' + (n && entries[n - 1].id === newestId ? ' arrive' : '') }, t.mascot));
 
   const p = progressInfo(n);
   return el('div', {},

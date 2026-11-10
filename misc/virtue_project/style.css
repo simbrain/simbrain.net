@@ -229,6 +229,7 @@ button.link {
 .log { padding-left: 1.6em; }
 .log li { margin-bottom: 14px; }
 .log-meta { font-size: 0.8rem; color: var(--muted); }
+.log-meta a { color: inherit; }
 .words { font-style: italic; }
 .log li.new { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
 

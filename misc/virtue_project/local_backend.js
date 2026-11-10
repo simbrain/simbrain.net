@@ -22,6 +22,13 @@ function makeFakeGoogle(storage) {
         save(db);
       },
       setFrozenRows() {},
+      getRange: (r, c) => ({
+        setValues(vals) {
+          const db = load();
+          vals.forEach((row, i) => row.forEach((v, j) => { db[name][r - 1 + i][c - 1 + j] = toCell(v); }));
+          save(db);
+        },
+      }),
       getDataRange: () => ({ getValues: () => (load()[name] || []).map((r) => r.map(fromCell)) }),
     };
   }

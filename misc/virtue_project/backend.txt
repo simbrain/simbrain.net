@@ -7,6 +7,7 @@
  *   login      {nickname}                 -> {nickname, tracks, entries}
  *   startTrack {nickname, track}          -> {tracks}
  *   addEntry   {nickname, entry}          -> {entry}
+ *   updateEntry {nickname, entry}         -> {entry}   (changes the text fields only)
  * Errors come back as {error: "message"}.
  */
 
@@ -98,6 +99,31 @@ function handle(req) {
         const existing = rows('Entries').find((e) => e.id === id && e.key === key);
         if (existing) return { entry: publicEntry(existing) };
         append('Entries', entry);
+        return { entry: publicEntry(entry) };
+      });
+    }
+
+    case 'updateEntry': {
+      requireUser(key);
+      const src = req.entry || {};
+      const id = String(src.id || '');
+      const fields = {};
+      for (const f of ENTRY_TEXT) fields[f] = String(src[f] || '').slice(0, MAX_TEXT);
+      if (!fields.kind || !fields.description || !fields.words) throw new Error('Please fill in the required fields.');
+      return withLock(() => {
+        const sh = sheet('Entries');
+        const values = sh.getDataRange().getValues();
+        const h = values[0];
+        const i = values.findIndex((r, j) => j > 0 && String(r[h.indexOf('id')]) === id && String(r[h.indexOf('key')]) === key);
+        if (i < 1) throw new Error("Couldn't find that entry.");
+        // Rewrite the whole row in one call, keeping text literal as in append().
+        const row = values[i].map((v, j) => {
+          if (h[j] in fields) return "'" + fields[h[j]];
+          return v instanceof Date ? v : "'" + String(v);
+        });
+        sh.getRange(i + 1, 1, 1, row.length).setValues([row]);
+        const entry = {};
+        h.forEach((name, j) => { entry[name] = row[j] instanceof Date ? row[j] : String(row[j]).slice(1); });
         return { entry: publicEntry(entry) };
       });
     }
