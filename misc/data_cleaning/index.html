@@ -43,18 +43,20 @@
         <li><strong>Imputation.</strong> Replace the <span id="num-imputed"></span> missing or bad numbers with the average of the rest of their column. Bad numbers include text (like NA, ?, or a number written in words), a value that is zero or negative, and a number off by orders of magnitude (like 99999 g).</li>
         <li><strong>Rescaling.</strong> Rescale any numeric column with values above 1 by dividing by its maximum.</li>
         <li><strong>Feature engineering.</strong> Replace each column of categories (text values) with one-hot columns.</li>
-        <li>Make two new tabs, named “inputs” and “targets”. Copy the input features into “inputs” and the one-hot fruit columns into “targets”.</li>
-        <li>Train a classifier in Simbrain to predict the fruit.</li>
+        <li>Make four new tabs, named “inputs_train”, “targets_train”, “inputs_test”, and “targets_test”. Copy the input features, with their column names, into “inputs_train”, and the one-hot fruit columns into “targets_train”. Paste by value (Edit &gt; Paste special &gt; Values only) so the tabs hold numbers rather than formulas.</li>
+        <li>Split off a test set of about 20 to 30 percent of the rows. For example, cut the last 10 rows of “inputs_train” and “targets_train” and paste them into “inputs_test” and “targets_test”. Copy the column names into row 1 of each test tab as well.</li>
+        <li>Download each of the four tabs as a CSV (File &gt; Download &gt; Comma-separated values).</li>
+        <li>Train a classifier in Simbrain to predict the fruit. There are four places to import data, one for each file. In every case, set “Use column names” to yes.</li>
       </ol>
     </details>
     <details>
       <summary>Spreadsheet formulas</summary>
-      <p>These assume the data runs from row 2 to row 35, with the column names in row 1. Adjust the letters and row numbers to match your sheet.</p>
+      <p>These are for Google Sheets, but most also work in Excel. They assume the data runs from row 2 to row 35, with the column names in row 1. Adjust the letters and row numbers to match your sheet.</p>
       <p><strong>Impute a cell.</strong> To fill a blank, for example C12, with the average of the cells above and below it, type <code>=AVERAGE(C2:C11, C13:C35)</code>.</p>
-      <p><strong>Rescale.</strong> In an empty column, type <code>=A2/MAX(A:A)</code>, replacing A with the column you are rescaling, and fill down.</p>
-      <p><strong>Copy a column.</strong> To copy column B into an empty column, type <code>=B2</code> in row 2 of the empty column and fill down. The copy updates if the original changes.</p>
-      <p><strong>One-hot.</strong> Type the category names (apple, orange, lemon) as column names in row 1 of three empty columns, for example G, H, I. In G2 type <code>=IF($D2=G$1,1,0)</code> and fill down and across.</p>
-      <p><strong>One-hot by hand.</strong> You can also type the 1s and 0s yourself. Type the category names in row 1 as above, then type 0 in G2. Drag it across to I2, then select G2:I2 and drag down to the last row, so every cell is 0. Then go down the rows one at a time and change the 0 under the matching fruit to 1.</p>
+      <p><strong>Rescale.</strong> To rescale a column, for example column A, type <code>=A2/MAX(A:A)</code> in row 2 of an empty column and fill down.</p>
+      <p><strong>Copy a column.</strong> To copy a column, for example column B, type <code>=B2</code> in row 2 of an empty column and fill down. The copy updates if the original changes.</p>
+      <p><strong>One-hot.</strong> Type the category names (apple, orange, lemon) as column names in row 1 of three empty columns. For example, if the fruit is in column D and the new columns are G, H, and I, type <code>=IF($D2=G$1,1,0)</code> in G2 and fill down and across.</p>
+      <p><strong>One-hot by hand.</strong> You can also type the 1s and 0s yourself. Type the category names in row 1 of three empty columns as above. Type 0 in row 2 of the first one and drag it across the other two. Then select those three cells and drag down to the last row, so every cell is 0. Finally, go down the rows one at a time and change the 0 under the matching fruit to 1.</p>
     </details>
     <button id="download" type="button">Download CSV</button>
     <table id="table"></table>
